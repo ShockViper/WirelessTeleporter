@@ -1,0 +1,8 @@
+author = ShockViper
+version = 0.0.1
+displayName = Wireless Teleporter
+hideCode = false
+hideResources = false
+includeSource = true
+includePDB = true
+buildIgnore = .git\*, *.csproj, *.user, obj\*, bin\*, .vs\*
