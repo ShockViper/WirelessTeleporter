@@ -12,32 +12,41 @@ using Terraria.DataStructures;
 
 namespace WirelessTeleporter.Tiles
 {
-    class WirelessServer : ModTile
+    class WirelessServer : WirelessServerFrame
     {
-        public override void SetDefaults()
+        public override void ModifyObjectData()
         {
-            
-            Main.tileSolid[Type] = true;
-            Main.tileBlockLight[Type] = true;
-            Main.tileLighted[Type] = true;
-            Main.tileFrameImportant[Type] = true;
-            TileObjectData.newTile.CopyFrom(TileObjectData.Style3x4);
-            TileObjectData.newTile.Origin = new Point16(0, 3);
-            //TileObjectData.newTile.AnchorBottom = new Terraria.DataStructures.AnchorData(Terraria.Enums.AnchorType.SolidTile, 3, 0);
-            //TileObjectData.newTile.UsesCustomCanPlace = true;
-            TileObjectData.addTile(Type);
-            //dustType = mod.DustType("Sparkle");
-            //drop = mod.ItemType("WirelessTeleporterBase");
-            AddMapEntry(new Color(200, 200, 200));
-            // Set other values here
+            TileObjectData.newTile.StyleHorizontal = true;
+            //TileObjectData.newTile.StyleMultiplier = 5;
+            TileObjectData.newTile.StyleWrapLimit = 5;
         }
 
- 
-
-        public override void KillMultiTile(int i, int j, int frameX, int frameY)
+        public override int ItemType(int frameX, int frameY)
         {
-            // the 3rd and 4th numbers should be 16*width blocks and 16 * height blocks respectively.
-            Item.NewItem(i * 16, j * 16, 48, 64, mod.ItemType("WirelessTeleporterBase"));
+            int style = frameX / 54;
+            int type;
+            switch (style)
+            {
+                case 1:
+                    type = mod.ItemType("WirelessServerM2");
+                    break;
+                case 2:
+                    type = mod.ItemType("WirelessServerM3");
+                    break;
+                case 3:
+                    type = mod.ItemType("WirelessServerM4");
+                    break;
+                case 4:
+                    type = mod.ItemType("WirelessServerM5");
+                    break;
+                default:
+                    type = mod.ItemType("WirelessServer");
+                    break;
+            }
+            return type;
         }
+
+
     }
+
 }

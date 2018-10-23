@@ -10,11 +10,11 @@ using Microsoft.Xna.Framework;
 
 namespace WirelessTeleporter.Items
 {
-    class WirelessServer : ModItem
+    class WirelessServerM4 : ModItem
     {
         public override void SetStaticDefaults()
         {
-            Tooltip.SetDefault("Wireless Server");
+            Tooltip.SetDefault("Wireless Server MK4");
         }
 
         public override void SetDefaults()
@@ -31,6 +31,7 @@ namespace WirelessTeleporter.Items
             item.maxStack = 1;
             item.value = Item.sellPrice(0, 50);
             item.createTile = mod.TileType("WirelessServer");
+            item.placeStyle = 3;
             // Set other item.X values here
         }
 
@@ -38,7 +39,7 @@ namespace WirelessTeleporter.Items
         {
             ModRecipe recipe = new ModRecipe(mod);
             recipe.AddIngredient(ItemID.IronBar,1);//chip
-            recipe.AddIngredient(mod.ItemType("WirelessServerFrame"));//clorophite
+            recipe.AddIngredient(mod.ItemType("WirelessServerM3"));//clorophite
             recipe.AddTile(TileID.TinkerersWorkbench);
             recipe.SetResult(this);
             recipe.AddRecipe();
