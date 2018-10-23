@@ -20,7 +20,6 @@ namespace WirelessTeleporter.Items
         public override void SetDefaults()
         {
             item.CloneDefaults(ItemID.Teleporter);
-            item.color = Color.Blue;
             item.value = Item.sellPrice(0, 25);
             item.createTile = mod.TileType("WirelessTeleporterBase");
             // Set other item.X values here
