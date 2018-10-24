@@ -9,6 +9,7 @@ using Terraria.ID;
 using Terraria.ObjectData;
 using Microsoft.Xna.Framework;
 using Terraria.DataStructures;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace WirelessTeleporter.Tiles
 {
@@ -26,11 +27,7 @@ namespace WirelessTeleporter.Tiles
             TileObjectData.newTile.StyleHorizontal = true;
             TileObjectData.newTile.Origin = new Point16(1, 0);
             TileObjectData.newTile.CoordinateHeights = new int[] { 16 };
-            //TileObjectData.newTile.AnchorBottom = new Terraria.DataStructures.AnchorData(Terraria.Enums.AnchorType.SolidTile, 3, 0);
-            //TileObjectData.newTile.UsesCustomCanPlace = true;
             TileObjectData.addTile(Type);
-            //dustType = mod.DustType("Sparkle");
-            //drop = mod.ItemType("WirelessTeleporterBase");
             AddMapEntry(new Color(200, 200, 200));
             animationFrameHeight = 18;
             // Set other values here
@@ -52,6 +49,27 @@ namespace WirelessTeleporter.Tiles
             frame = Main.tileFrame[TileID.Teleporter];
         }
 
+        public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)
+        {
+            int frame = Main.tileFrame[Type];
+            switch (frame)
+            {
+                case 0:
+                    r = 0.1f;
+                    g = 0.1f;
+                    b = 0.1f;
+                    break;
+                case 1:
+                    b = 0.3f;
+                    break;
+                case 2:
+                    b = 0.5f;
+                    break;
+                case 3:
+                    b = 0.7f;
+                    break;
+            }
+        }
 
         public override void KillMultiTile(int i, int j, int frameX, int frameY)
         {
