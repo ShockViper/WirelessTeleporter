@@ -14,6 +14,7 @@ namespace WirelessTeleporter.Tiles
 {
     class WirelessServerFrame : ModTile
     {
+
         public override void SetDefaults()
         {
             
@@ -21,14 +22,12 @@ namespace WirelessTeleporter.Tiles
             Main.tileBlockLight[Type] = true;
             Main.tileLighted[Type] = true;
             Main.tileFrameImportant[Type] = true;
+            Main.tileSign[Type] = true;
+            Main.signBubble = false;
             TileObjectData.newTile.CopyFrom(TileObjectData.Style3x4);
             TileObjectData.newTile.Origin = new Point16(0, 3);
-            //TileObjectData.newTile.AnchorBottom = new Terraria.DataStructures.AnchorData(Terraria.Enums.AnchorType.SolidTile, 3, 0);
-            //TileObjectData.newTile.UsesCustomCanPlace = true;
             ModifyObjectData();
             TileObjectData.addTile(Type);
-            //dustType = mod.DustType("Sparkle");
-            //drop = mod.ItemType("WirelessTeleporterBase");
             AddMapEntry(new Color(200, 200, 200));
             // Set other values here
         }

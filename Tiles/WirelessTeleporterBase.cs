@@ -16,8 +16,7 @@ namespace WirelessTeleporter.Tiles
     class WirelessTeleporterBase : ModTile
     {
         public override void SetDefaults()
-        {
-            
+        {            
             Main.tileSolid[Type] = true;
             Main.tileBlockLight[Type] = true;
             Main.tileLighted[Type] = true;
@@ -32,7 +31,7 @@ namespace WirelessTeleporter.Tiles
             animationFrameHeight = 18;
             // Set other values here
         }
-
+        
         public override void AnimateTile(ref int frame, ref int frameCounter)
         {
             /*frameCounter++;
@@ -70,7 +69,7 @@ namespace WirelessTeleporter.Tiles
                     break;
             }
         }
-
+ 
         public override void KillMultiTile(int i, int j, int frameX, int frameY)
         {
             // the 3rd and 4th numbers should be 16*width blocks and 16 * height blocks respectively.
