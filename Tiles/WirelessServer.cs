@@ -21,6 +21,7 @@ namespace WirelessTeleporter.Tiles
             TileObjectData.newTile.StyleHorizontal = true;
             //TileObjectData.newTile.StyleMultiplier = 5;
             TileObjectData.newTile.StyleWrapLimit = 5;
+            TileObjectData.newTile.HookPostPlaceMyPlayer = new PlacementHook(mod.GetTileEntity<TEServer>().Hook_AfterPlacement, -1, 0, true);
         }
 
         public override int ItemType(int frameX, int frameY)
@@ -57,7 +58,7 @@ namespace WirelessTeleporter.Tiles
             Main.signX = left * 16 + 16;
             Main.signY = top * 16;
             int sign= Sign.ReadSign(i, j);
-            Sign.TextSign(sign, Name +" "+this.styleName);
+            Sign.TextSign(sign, Name +" ");
             Main.signBubble = false;
 
         }

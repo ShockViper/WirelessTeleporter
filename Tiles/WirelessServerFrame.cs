@@ -46,6 +46,8 @@ namespace WirelessTeleporter.Tiles
         {
              // the 3rd and 4th numbers should be 16*width blocks and 16 * height blocks respectively.
             Item.NewItem(i * 16, j * 16, 48, 64, ItemType(frameX, frameY));
+
+            mod.GetTileEntity<TEServer>().Kill(i, j);
             //Item.NewItem(i * 16, j * 16, 48, 64, mod.ItemType(item));
         }
     }
