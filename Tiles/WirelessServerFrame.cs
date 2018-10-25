@@ -41,9 +41,12 @@ namespace WirelessTeleporter.Tiles
 
         public override void KillMultiTile(int i, int j, int frameX, int frameY)
         {
-             // the 3rd and 4th numbers should be 16*width blocks and 16 * height blocks respectively.
-            Item.NewItem(i * 16, j * 16, 48, 64, ItemType(frameX, frameY));
-
+            // the 3rd and 4th numbers should be 16*width blocks and 16 * height blocks respectively.
+            int type = ItemType(frameX, frameY);
+            Item.NewItem(i * 16, j * 16, 48, 64, type );
+            if (type== mod.ItemType("WirelessServerFrame")) { return; }
+            WirelessWorld.servers.Remove(TEServer.GetTopLeft(i, j));
+            WirelessWorld.totalCapacity -= ((TEServer)TileEntity.ByPosition[TEServer.GetTopLeft(i, j)]).capacity;
             mod.GetTileEntity<TEServer>().Kill(i, j);
             //Item.NewItem(i * 16, j * 16, 48, 64, mod.ItemType(item));
         }

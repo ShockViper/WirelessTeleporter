@@ -14,7 +14,8 @@ namespace WirelessTeleporter.Items
     {
         public override void SetStaticDefaults()
         {
-            Tooltip.SetDefault("Wireless Server MK4");
+            DisplayName.SetDefault("Wireless Server MK4");
+            Tooltip.SetDefault("Even better server for 8 teleports");
         }
 
         public override void SetDefaults()

@@ -26,6 +26,7 @@ namespace WirelessTeleporter.Tiles
             TileObjectData.newTile.StyleHorizontal = true;
             //TileObjectData.newTile.StyleMultiplier = 5;
             TileObjectData.newTile.StyleWrapLimit = 5;
+            TileObjectData.newTile.UsesCustomCanPlace = true;
             TileObjectData.newTile.HookPostPlaceMyPlayer = new PlacementHook(mod.GetTileEntity<TEServer>().Hook_AfterPlacement, -1, 0, true);
         }
 
@@ -59,6 +60,15 @@ namespace WirelessTeleporter.Tiles
             return type=mod.ItemType(styleName);
         }
 
+        public override bool CanPlace(int i, int j)
+        {
+            if (WirelessWorld.activeServers >= WirelessWorld.maxServers)
+            {
+                if (WirelessWorld.checkTimerText()) { Main.NewText("Max server capacity exceeded (4)"); }
+                return false;
+            }
+            return base.CanPlace(i, j);
+        }
 
         public override void PlaceInWorld(int i, int j, Item item)
         {
@@ -84,20 +94,14 @@ namespace WirelessTeleporter.Tiles
 
         private void MouseOverBoth(int i, int j)
         {
-            Tile tile = Main.tile[i, j];
-            int itemT = ItemType(tile.frameX, tile.frameY);
-            int posx = i - ((tile.frameX % 54) / 18);
-            int posy = j - (tile.frameY / 18);
+            Point16 topleft = TEServer.GetTopLeft(i, j);
             WirelesTeleporter.hovering = true;
 
              if (true)
             {
-                string info = ((TEServer)TileEntity.ByPosition[new Point16(posx, posy)]).GetServerInfo();
+                string info = ((TEServer)TileEntity.ByPosition[topleft]).GetServerInfo();
+                info += "\n" + WirelessWorld.activeServers;
                 WirelesTeleporter.hovername = info;
-            }
-            else
-            {
-                //WirelesTeleporter.hovername = posx + ":" + posy + " " + tile.frameX + ":" + tile.frameY + " " + tile.frameX % 54;//info.GetServerInfo();
             }
         }
 

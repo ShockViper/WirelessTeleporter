@@ -14,7 +14,8 @@ namespace WirelessTeleporter.Items
     {
         public override void SetStaticDefaults()
         {
-            Tooltip.SetDefault("Wireless Server Frame");
+            DisplayName.SetDefault("Wireless Server Frame");
+            Tooltip.SetDefault("Frame for Wireless servers");
         }
 
         public override void SetDefaults()

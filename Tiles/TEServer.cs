@@ -16,22 +16,42 @@ namespace WirelessTeleporter.Tiles
         internal int capacity;
         internal int serverID;
         internal int style;
+        internal Point16 position = new Point16(-1, -1);
 
-        private void InitAfterPlace(int i,int id)
+        private void InitAfterPlace(int i, int j, int stil, int id)
         {
             TEServer tmp = (TEServer) TileEntity.ByID[id];
-            tmp.style = i;
+            tmp.style = stil;
             tmp.serverID = id;
-            tmp.capacity = (i + 1) * 2;
+            tmp.capacity = (stil + 1) * 2;
             tmp.name = "Server" + id;
+            tmp.position = new Point16(i, j);
+            updateWorld(tmp.position, tmp.capacity);
+
+         }
+
+        public static Point16 GetTopLeft(int i, int j)
+        {
+            Tile tile = Main.tile[i, j];
+            int posx = i - ((tile.frameX % 54) / 18);
+            int posy = j - (tile.frameY / 18);
+            return new Point16(posx, posy);
+        }
+
+        private void updateWorld(Point16 pos,int cap)
+        {
+            WirelessWorld.servers.Add(pos);
+            WirelessWorld.activeServers++;
+            WirelessWorld.totalCapacity += cap;
+
         }
 
         public string GetServerInfo()
         {
             string info="";
-            info = "Name : " + name + "\n";
-            info += "ID  : " + serverID + "\n";
-            info += "Cap : " + capacity;
+            info =  "Name : " + name + "\n";
+            info += "Pos  : " + position.ToString() + "\n";
+            info += "Cap  : " + capacity+"/"+WirelessWorld.totalCapacity;
             return info;
         }
 
@@ -54,7 +74,8 @@ namespace WirelessTeleporter.Tiles
                 {"name", name},
                 {"capacity", capacity},
                 {"serverID", serverID},
-                {"style", style}
+                {"style", style},
+                {"pos", position }
             };
         }
 
@@ -64,6 +85,8 @@ namespace WirelessTeleporter.Tiles
             capacity = tag.Get<int>("capacity");
             serverID = tag.Get<int>("serverID");
             style = tag.Get<int>("style");
+            position = tag.Get<Point16>("pos");
+            updateWorld(position, capacity);
         }
 
         public override bool ValidTile(int i, int j)
@@ -75,6 +98,7 @@ namespace WirelessTeleporter.Tiles
         public override void OnKill()
         {
             base.OnKill();
+            if (WirelessWorld.activeServers > 0) { WirelessWorld.activeServers--; }
             Main.NewText("killed");
         }
 
@@ -88,7 +112,8 @@ namespace WirelessTeleporter.Tiles
                 return -1;
             }
             int id = Place(i, j);
-            InitAfterPlace(style, id);
+            
+            InitAfterPlace(i, j, style, id);
             return id;
         }
     }

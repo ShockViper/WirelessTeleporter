@@ -49,6 +49,39 @@ namespace WirelessTeleporter.Tiles
             frame = Main.tileFrame[TileID.Teleporter];
         }
 
+        public override void MouseOver(int i, int j)
+        {
+            MouseOverBoth(i, j);
+        }
+
+        public override void MouseOverFar(int i, int j)
+        {
+            MouseOverBoth(i, j);
+        }
+
+        private void MouseOverBoth(int i, int j)
+        {
+            Point16 topleft = TETeleport.GetTopLeft(i, j);
+            WirelesTeleporter.hovering = true;
+
+            if (true)
+            {
+                string info = ((TETeleport)TileEntity.ByPosition[topleft]).GetTeleportInfo();
+                WirelesTeleporter.hovername = info;
+            }
+        }
+
+        public override void RightClick(int i, int j)
+        {
+            base.RightClick(i, j);
+            Point16 topleft = TETeleport.GetTopLeft(i, j);
+            List<Point16> servers= ((TETeleport)TileEntity.ByPosition[topleft]).CheckServersInRange(topleft);
+            foreach(Point16 pos in servers)
+            {
+                Main.NewText(pos.ToString());
+            }
+        }
+
         public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)
         {
             int frame = Main.tileFrame[Type];
@@ -75,6 +108,7 @@ namespace WirelessTeleporter.Tiles
         {
             // the 3rd and 4th numbers should be 16*width blocks and 16 * height blocks respectively.
             Item.NewItem(i * 16, j * 16, 48, 16, mod.ItemType("WirelessTeleporterBase"));
+            mod.GetTileEntity<TETeleport>().Kill(i, j);
         }
     }
 }
