@@ -26,6 +26,7 @@ namespace WirelessTeleporter.Tiles
             TileObjectData.newTile.StyleHorizontal = true;
             TileObjectData.newTile.Origin = new Point16(1, 0);
             TileObjectData.newTile.CoordinateHeights = new int[] { 16 };
+            TileObjectData.newTile.HookPostPlaceMyPlayer = new PlacementHook(mod.GetTileEntity<TETeleport>().Hook_AfterPlacement, -1, 0, true);
             TileObjectData.addTile(Type);
             AddMapEntry(new Color(200, 200, 200));
             animationFrameHeight = 18;

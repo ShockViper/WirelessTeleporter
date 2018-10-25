@@ -6,6 +6,7 @@ using Terraria.ModLoader;
 using Terraria;
 using Terraria.ModLoader.IO;
 using System.IO;
+using Terraria.DataStructures;
 
 namespace WirelessTeleporter.Tiles
 {
@@ -15,6 +16,24 @@ namespace WirelessTeleporter.Tiles
         internal int capacity;
         internal int serverID;
         internal int style;
+
+        private void InitAfterPlace(int i,int id)
+        {
+            TEServer tmp = (TEServer) TileEntity.ByID[id];
+            tmp.style = i;
+            tmp.serverID = id;
+            tmp.capacity = (i + 1) * 2;
+            tmp.name = "Server" + id;
+        }
+
+        public string GetServerInfo()
+        {
+            string info="";
+            info = "Name : " + name + "\n";
+            info += "ID  : " + serverID + "\n";
+            info += "Cap : " + capacity;
+            return info;
+        }
 
         public override void Update()
         {
@@ -41,7 +60,7 @@ namespace WirelessTeleporter.Tiles
 
         public override void Load(TagCompound tag)
         {
-            string names = tag.Get<string>("name");
+            name = tag.Get<string>("name");
             capacity = tag.Get<int>("capacity");
             serverID = tag.Get<int>("serverID");
             style = tag.Get<int>("style");
@@ -50,19 +69,27 @@ namespace WirelessTeleporter.Tiles
         public override bool ValidTile(int i, int j)
         {
             Tile tile = Main.tile[i, j];
-            return tile.active() && tile.type == mod.TileType<WirelessServer>() && tile.frameX == 0 && tile.frameY == 0;
+            return tile.active() && tile.type == mod.TileType<WirelessServer>() && tile.frameX % 54 == 0 && tile.frameY / 18 == 0;
+        }
+
+        public override void OnKill()
+        {
+            base.OnKill();
+            Main.NewText("killed");
         }
 
         public override int Hook_AfterPlacement(int i, int j, int type, int style, int direction)
         {
-            Main.NewText("i " + i + " j " + j + " t " + type + " s " + style + " d " + direction);
+            Main.NewText("server:i " + i + " j " + j + " t " + type + " s " + style + " d " + direction);
             if (Main.netMode == 1)
             {
                 NetMessage.SendTileSquare(Main.myPlayer, i, j, 3);
                 NetMessage.SendData(87, -1, -1, null, i, j, Type, 0f, 0, 0, 0);
                 return -1;
             }
-            return Place(i, j);
+            int id = Place(i, j);
+            InitAfterPlace(style, id);
+            return id;
         }
     }
 }

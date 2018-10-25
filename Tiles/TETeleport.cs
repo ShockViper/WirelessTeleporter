@@ -52,7 +52,7 @@ namespace WirelessTeleporter.Tiles
 
         public override int Hook_AfterPlacement(int i, int j, int type, int style, int direction)
         {
-            //Main.NewText("i " + i + " j " + j + " t " + type + " s " + style + " d " + direction);
+            Main.NewText("teleport:i " + i + " j " + j + " t " + type + " s " + style + " d " + direction);
             if (Main.netMode == 1)
             {
                 NetMessage.SendTileSquare(Main.myPlayer, i, j, 3);

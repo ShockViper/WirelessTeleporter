@@ -22,8 +22,6 @@ namespace WirelessTeleporter.Tiles
             Main.tileBlockLight[Type] = true;
             Main.tileLighted[Type] = true;
             Main.tileFrameImportant[Type] = true;
-            Main.tileSign[Type] = true;
-            Main.signBubble = false;
             TileObjectData.newTile.CopyFrom(TileObjectData.Style3x4);
             TileObjectData.newTile.Origin = new Point16(0, 3);
             ModifyObjectData();

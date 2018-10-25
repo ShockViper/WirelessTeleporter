@@ -62,10 +62,15 @@ namespace WirelessTeleporter.Tiles
 
         public override void PlaceInWorld(int i, int j, Item item)
         {
-            Tile tile = Main.tile[i, j];
-            WirelesTeleporter.servers.Add(this);
+            Tile tile = Main.tile[i, j];            
+        }
+
+        public override void RightClick(int i, int j)
+        {
+            ServerInfoUI.visible = !ServerInfoUI.visible;
             
         }
+
 
         public override void MouseOver(int i, int j)
         {
@@ -77,15 +82,22 @@ namespace WirelessTeleporter.Tiles
             MouseOverBoth(i, j);
         }
 
-        private void MouseOverBoth(int i,int j)
+        private void MouseOverBoth(int i, int j)
         {
             Tile tile = Main.tile[i, j];
             int itemT = ItemType(tile.frameX, tile.frameY);
-            int sign = Sign.ReadSign(i, j, true);
-            if (sign > -1)
+            int posx = i - ((tile.frameX % 54) / 18);
+            int posy = j - (tile.frameY / 18);
+            WirelesTeleporter.hovering = true;
+
+             if (true)
             {
-                Sign.TextSign(sign, Name + " " + styleName + "\nCap: " + capacity+"\nServCount: "+WirelesTeleporter.servers.Count);
-                Main.signHover = sign;
+                string info = ((TEServer)TileEntity.ByPosition[new Point16(posx, posy)]).GetServerInfo();
+                WirelesTeleporter.hovername = info;
+            }
+            else
+            {
+                //WirelesTeleporter.hovername = posx + ":" + posy + " " + tile.frameX + ":" + tile.frameY + " " + tile.frameX % 54;//info.GetServerInfo();
             }
         }
 
