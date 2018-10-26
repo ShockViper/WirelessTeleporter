@@ -11,26 +11,46 @@ using Terraria;
 
 namespace WirelessTeleporter
 {
+    public enum UImode
+    {
+        Server,
+        Teleport
+    }
     public class WirelesTeleporter : Mod
     {
         internal static WirelesTeleporter instance;
-        internal ServerInfoUI serverUI;
-        private UserInterface serverUserInterface;
+        internal static ServerInfoUI serverUI;
+        private static UserInterface serverUserInterface;
         public static string hovername;
         public static bool hovering = false;
 
         public override void Load()
         {
             instance = this;
-            serverUI = new ServerInfoUI();
-            serverUI.Activate();
             serverUserInterface = new UserInterface();
-            serverUserInterface.SetState(serverUI);
-
+            serverUI = new ServerInfoUI();
         }
         public override void Unload()
         {
             instance = null;
+        }
+
+
+        public static void ActivateUI(UImode type)
+        {
+            if (serverUI != null) { serverUI.Deactivate(); }
+            switch (type)
+            {
+                case UImode.Server:
+                    serverUI = new ServerInfoUI();
+                    serverUI.Activate();
+                    serverUserInterface.SetState(serverUI);
+                    break;
+                case UImode.Teleport:
+                    break;
+                default:
+                    return;
+            }
         }
 
         public override void UpdateUI(GameTime gameTime)
@@ -45,12 +65,11 @@ namespace WirelessTeleporter
             if (MouseTextIndex != -1)
             {
                 layers.Insert(MouseTextIndex, new LegacyGameInterfaceLayer(
-                    "Wireless Teleport: Server Info",
+                    "Wireless Teleport: Info",
                     delegate
                     {
-                        if (ServerInfoUI.visible)
+                        if (ServerInfoUI.visible )
                         {
-                            Main.hoverItemName = hovername;
                             serverUserInterface.Draw(Main.spriteBatch, new GameTime());
                             hovername = "";
                         }
@@ -63,7 +82,15 @@ namespace WirelessTeleporter
             }
         }
 
-
+        public override void PostUpdateInput()
+        {
+            if (!Main.instance.IsActive)
+            {
+                return;
+            }
+            ServerInfoUI.CheckMouse(null);
         }
 
     }
+
+}

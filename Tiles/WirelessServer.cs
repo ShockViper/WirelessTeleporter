@@ -77,8 +77,15 @@ namespace WirelessTeleporter.Tiles
 
         public override void RightClick(int i, int j)
         {
-            ServerInfoUI.visible = !ServerInfoUI.visible;
-            
+            Point16 topleft = TEServer.GetTopLeft(i, j);
+            if (!ServerInfoUI.visible)
+            {
+                ServerInfoUI.visible = true;
+                ServerInfoUI.activeServer = (TEServer)TileEntity.ByPosition[topleft];
+                WirelesTeleporter.ActivateUI(UImode.Server);
+                WirelesTeleporter.serverUI.setName(ServerInfoUI.activeServer.name);
+            }
+
         }
 
 
