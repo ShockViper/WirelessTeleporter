@@ -15,7 +15,7 @@ namespace WirelessTeleporter.Tiles
     {
         internal string name;
         internal int teleportID;
-        internal int connectedTo;
+        internal Point16 connectedTo;
         internal int range = 20;
 
         public override void Update()
@@ -90,7 +90,7 @@ namespace WirelessTeleporter.Tiles
         {
             name = tag.Get<string>("name");
             teleportID = tag.Get<int>("teleportID");
-            connectedTo = tag.Get<int>("connectedTo");
+            connectedTo = tag.Get<Point16>("connectedTo");
         }
 
         public override bool ValidTile(int i, int j)

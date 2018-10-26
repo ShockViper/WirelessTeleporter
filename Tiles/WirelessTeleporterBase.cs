@@ -75,7 +75,8 @@ namespace WirelessTeleporter.Tiles
         {
             base.RightClick(i, j);
             Point16 topleft = TETeleport.GetTopLeft(i, j);
-            List<Point16> servers = ((TETeleport)TileEntity.ByPosition[topleft]).CheckServersInRange(topleft);
+            TETeleport tel = (TETeleport)TileEntity.ByPosition[topleft];
+            List<Point16> servers = tel.CheckServersInRange(topleft);
             foreach(Point16 pos in servers)
             {
                 Main.NewText(pos.ToString());
@@ -87,6 +88,7 @@ namespace WirelessTeleporter.Tiles
                 ServerInfoUI.activeTeleport = (TETeleport)TileEntity.ByPosition[topleft];
                 WirelesTeleporter.ActivateUI(UImode.Server);
                 WirelesTeleporter.serverUI.setName(ServerInfoUI.activeTeleport.name);
+                WirelesTeleporter.serverUI.addTeleportPanel(tel,servers, tel.connectedTo);
             }
 
         }

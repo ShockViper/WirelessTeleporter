@@ -90,7 +90,8 @@ namespace WirelessTeleporter
 				else if (hasFocus && !mouseOver)
 				{
 					hasFocus = false;
-					CheckBlockInput();
+                    UpdateName();
+                    CheckBlockInput();
 					cursorPosition = text.Length;
 				}
 			}
@@ -103,6 +104,7 @@ namespace WirelessTeleporter
 				{
 					hasFocus = false;
 					cursorPosition = text.Length;
+                    UpdateName();
 					CheckBlockInput();
 				}
 			}
@@ -111,16 +113,22 @@ namespace WirelessTeleporter
 			{
 				if (KeyTyped(Keys.Enter) || KeyTyped(Keys.Tab) || KeyTyped(Keys.Escape))
 				{
-					hasFocus = false;
+                    UpdateName();
+                    hasFocus = false;
 					CheckBlockInput();
-                    if (ServerInfoUI.activeTeleport != null) { ServerInfoUI.activeTeleport.name = text; }
-                    if (ServerInfoUI.activeServer != null) { ServerInfoUI.activeServer.name = text; }
-                }
+                 }
             }
 			base.Update(gameTime);
 		}
 
-		protected override void DrawSelf(SpriteBatch spriteBatch)
+        private void UpdateName()
+        {
+            if (ServerInfoUI.activeTeleport != null) { ServerInfoUI.activeTeleport.name = text; }
+            if (ServerInfoUI.activeServer != null) { ServerInfoUI.activeServer.name = text; }
+
+        }
+
+        protected override void DrawSelf(SpriteBatch spriteBatch)
 		{
             if (hasFocus)
             {
