@@ -9,11 +9,27 @@ using Terraria.ModLoader;
 using Terraria.GameContent.UI.Elements;
 using Terraria.UI;
 using Terraria.ID;
+using Microsoft.Xna.Framework.Input;
+using WirelessTeleporter.Tiles;
+
 namespace WirelessTeleporter
 {
     class ServerInfoUI : UIState
     {
+
+        public static TETeleport activeTeleport;
+        public static TEServer activeServer;
+        public static MouseState curMouse;
+        public static MouseState oldMouse;
+        public static bool MouseClicked
+        {
+            get
+            {
+                return curMouse.LeftButton == ButtonState.Pressed && oldMouse.LeftButton == ButtonState.Released;
+            }
+        }
         public UIPanel info;
+        private UITextBox txtName;
         public static bool visible = false;
 
         public override void OnInitialize()
@@ -23,17 +39,22 @@ namespace WirelessTeleporter
             info.SetPadding(0);
             // We need to place this UIElement in relation to its Parent. Later we will be calling `base.Append(info);`. 
             // This means that this class, ExampleUI, will be our Parent. Since ExampleUI is a UIState, the Left and Top are relative to the top left of the screen.
-            info.Left.Set(100f, 0f);
-            info.Top.Set(100f, 0f);
-            info.Width.Set(170f, 0f);
-            info.Height.Set(70f, 0f);
-            info.BackgroundColor = Color.White; ;
+            info.Left.Set(300f, 0f);
+            info.Top.Set(200f, 0f);
+            info.Width.Set(300f, 0f);
+            info.Height.Set(100f, 0f);
+            info.BackgroundColor = Color.BlueViolet;
 
             // Next, we create another UIElement that we will place. Since we will be calling `info.Append(playButton);`, Left and Top are relative to the top left of the info UIElement. 
             // By properly nesting UIElements, we can position things relatively to each other easily.
             // Texture2D buttonPlayTexture = mod.GetTexture("Terraria/UI/ButtonPlay");
-            UIText name = new UIText("name:");
-            info.Append(name);
+            txtName = new UITextBox();
+            txtName.Left.Set(10f, 0f);
+            txtName.Top.Set(10f, 0f);
+            txtName.Width.Set(250f, 0f);
+            txtName.Height.Set(40f, 0f);
+
+            info.Append(txtName);
             //UIHoverImageButton playButton = new UIHoverImageButton(buttonPlayTexture, "Reset Coins Per Minute Counter");
             //playButton.Left.Set(110, 0f);
             //playButton.Top.Set(10, 0f);
@@ -43,14 +64,14 @@ namespace WirelessTeleporter
             //playButton.OnClick += new MouseEvent(PlayButtonClicked);
             //info.Append(playButton);
 
-            //Texture2D buttonDeleteTexture = ModContent.GetTexture("Terraria/UI/ButtonDelete");
-            //UIHoverImageButton closeButton = new UIHoverImageButton(buttonDeleteTexture, Language.GetTextValue("LegacyInterface.52")); // Localized text for "Close"
-            //closeButton.Left.Set(140, 0f);
-            //closeButton.Top.Set(10, 0f);
-            //closeButton.Width.Set(22, 0f);
-            //closeButton.Height.Set(22, 0f);
-            //closeButton.OnClick += new MouseEvent(CloseButtonClicked);
-            //info.Append(closeButton);
+            Texture2D btnClose = ModLoader.GetTexture("WirelessTeleporter/UI/BtnClose");
+            UIHoverImageButton closeButton = new UIHoverImageButton(btnClose, "Close"); // Localized text for "Close"
+            closeButton.Left.Set(270, 0f);
+            closeButton.Top.Set(10, 0f);
+            closeButton.Width.Set(22, 0f);
+            closeButton.Height.Set(22, 0f);
+            closeButton.OnClick += new MouseEvent(CloseButtonClicked);
+            info.Append(closeButton);
 
             //// UIMoneyDisplay is a fairly complicated custom UIElement. UIMoneyDisplay handles drawing some text and coin textures.
             //// Organization is key to managing UI design. Making a contained UIElement like UIMoneyDisplay will make many things easier.
@@ -67,5 +88,26 @@ namespace WirelessTeleporter
             // We then place playButton, closeButton, and moneyDiplay onto info so we can easily place these UIElements relative to info.
             // Since info will move, this proper organization will move playButton, closeButton, and moneyDiplay properly when info moves.
         }
+
+        private void CloseButtonClicked(UIMouseEvent evt, UIElement listeningElement)
+        {
+            Main.PlaySound(SoundID.MenuOpen);
+            activeServer = null;
+            activeTeleport = null;
+            visible = false;
+        }
+
+
+        public void setName(string name)
+        {
+            this.txtName.setText (name);
+        }
+
+        public static void CheckMouse(GameTime gameTime)
+        {
+            oldMouse = curMouse;
+            curMouse = Mouse.GetState();
+         }
+
     }
 }

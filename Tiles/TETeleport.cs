@@ -96,7 +96,7 @@ namespace WirelessTeleporter.Tiles
         public override bool ValidTile(int i, int j)
         {
             Tile tile = Main.tile[i, j];
-            return tile.active() && tile.type == mod.TileType<WirelessServer>() && tile.frameX == 0 && (tile.frameY % 18)== 0;
+            return tile.active() && tile.type == mod.TileType<WirelessTeleporterBase>() && tile.frameX / 18 == 0 && (tile.frameY % 18)== 0;
         }
 
         public override int Hook_AfterPlacement(int i, int j, int type, int style, int direction)

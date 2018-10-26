@@ -75,11 +75,20 @@ namespace WirelessTeleporter.Tiles
         {
             base.RightClick(i, j);
             Point16 topleft = TETeleport.GetTopLeft(i, j);
-            List<Point16> servers= ((TETeleport)TileEntity.ByPosition[topleft]).CheckServersInRange(topleft);
+            List<Point16> servers = ((TETeleport)TileEntity.ByPosition[topleft]).CheckServersInRange(topleft);
             foreach(Point16 pos in servers)
             {
                 Main.NewText(pos.ToString());
             }
+
+            if (!ServerInfoUI.visible)
+            {
+                ServerInfoUI.visible = true;
+                ServerInfoUI.activeTeleport = (TETeleport)TileEntity.ByPosition[topleft];
+                WirelesTeleporter.ActivateUI(UImode.Server);
+                WirelesTeleporter.serverUI.setName(ServerInfoUI.activeTeleport.name);
+            }
+
         }
 
         public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)
