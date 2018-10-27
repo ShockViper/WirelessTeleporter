@@ -17,6 +17,7 @@ namespace WirelessTeleporter.Tiles
         internal int serverID;
         internal int style;
         internal Point16 position = new Point16(-1, -1);
+        internal List<TETeleport> teleports = new List<TETeleport>();
 
         private void InitAfterPlace(int i, int j, int stil, int id)
         {
@@ -26,7 +27,7 @@ namespace WirelessTeleporter.Tiles
             tmp.capacity = (stil + 1) * 2;
             tmp.name = "Server" + id;
             tmp.position = new Point16(i, j);
-            updateWorld(tmp.position, tmp.capacity);
+            UpdateWorld(tmp.position, tmp.capacity);
 
          }
 
@@ -38,7 +39,7 @@ namespace WirelessTeleporter.Tiles
             return new Point16(posx, posy);
         }
 
-        private void updateWorld(Point16 pos,int cap)
+        private void UpdateWorld(Point16 pos,int cap)
         {
             WirelessWorld.servers.Add(pos);
             WirelessWorld.activeServers++;
@@ -86,7 +87,7 @@ namespace WirelessTeleporter.Tiles
             serverID = tag.Get<int>("serverID");
             style = tag.Get<int>("style");
             position = tag.Get<Point16>("pos");
-            updateWorld(position, capacity);
+            UpdateWorld(position, capacity);
         }
 
         public override bool ValidTile(int i, int j)
@@ -97,9 +98,13 @@ namespace WirelessTeleporter.Tiles
 
         public override void OnKill()
         {
-            base.OnKill();
             if (WirelessWorld.activeServers > 0) { WirelessWorld.activeServers--; }
+            foreach (TETeleport tports in teleports)
+            {
+                tports.connectedTo = new Point16(-1, -1);
+            }
             Main.NewText("killed");
+            base.OnKill();
         }
 
         public override int Hook_AfterPlacement(int i, int j, int type, int style, int direction)

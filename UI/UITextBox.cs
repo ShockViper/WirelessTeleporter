@@ -17,14 +17,13 @@ namespace WirelessTeleporter
 		private static List<UITextBox> textBoxes = new List<UITextBox>();
 
 		private const int padding = 2;
-        private string defaultText = "name";
-		private string text = string.Empty;
-		private int cursorPosition = 0;
+        private readonly string defaultText = "name";
+        private int cursorPosition = 0;
 		private bool hasFocus = false;
 		private int cursorTimer = 0;
-        private static bool bi;
+        private string Text  = string.Empty;
 
-		public UITextBox()
+        public UITextBox()
 		{
 			this.SetPadding(padding);
 			textBoxes.Add(this);
@@ -35,22 +34,15 @@ namespace WirelessTeleporter
 			this.defaultText = defaultText;
 		}
 
-		public string Text
-		{
-			get
-			{
-				return text;
-			}
-		}
 
-        public void setText(string txt)
+        public void SetText(string txt)
         {
-            text = txt;
+            Text = txt;
         }
 
 		public void Reset()
 		{
-			text = string.Empty;
+			Text = string.Empty;
 			cursorPosition = 0;
 			hasFocus = false;
 			CheckBlockInput();
@@ -92,7 +84,7 @@ namespace WirelessTeleporter
 					hasFocus = false;
                     UpdateName();
                     CheckBlockInput();
-					cursorPosition = text.Length;
+					cursorPosition = Text.Length;
 				}
 			}
 			else if (ServerInfoUI.curMouse.RightButton == ButtonState.Pressed && ServerInfoUI.oldMouse.RightButton == ButtonState.Released && Parent != null && hasFocus)
@@ -103,7 +95,7 @@ namespace WirelessTeleporter
 				if (!mouseOver)
 				{
 					hasFocus = false;
-					cursorPosition = text.Length;
+					cursorPosition = Text.Length;
                     UpdateName();
 					CheckBlockInput();
 				}
@@ -123,8 +115,8 @@ namespace WirelessTeleporter
 
         private void UpdateName()
         {
-            if (ServerInfoUI.activeTeleport != null) { ServerInfoUI.activeTeleport.name = text; }
-            if (ServerInfoUI.activeServer != null) { ServerInfoUI.activeServer.name = text; }
+            if (ServerInfoUI.activeTeleport != null) { ServerInfoUI.activeTeleport.name = Text; }
+            if (ServerInfoUI.activeServer != null) { ServerInfoUI.activeServer.name = Text; }
 
         }
 
@@ -134,8 +126,8 @@ namespace WirelessTeleporter
             {
                 PlayerInput.WritingText = true;
                 Main.instance.HandleIME();
-                text = Main.GetInputText(this.text);
-                cursorPosition = text.Length;
+                Text = Main.GetInputText(this.Text);
+                cursorPosition = Text.Length;
             }
             Texture2D texture = ModLoader.GetTexture("WirelessTeleporter/UI/TextBox");
 			CalculatedStyle dim = GetDimensions();
@@ -151,8 +143,8 @@ namespace WirelessTeleporter
 			spriteBatch.Draw(texture, new Rectangle((int)dim.X + padding, (int)dim.Y + padding + innerHeight, innerWidth, padding), new Rectangle(padding, padding + 1, 1, padding), Color.White);
 			spriteBatch.Draw(texture, new Vector2(dim.X + padding + innerWidth, dim.Y + padding + innerHeight), new Rectangle(padding + 1, padding + 1, padding, padding), Color.White);
 
-			bool isEmpty = text.Length == 0;
-			string drawText = isEmpty ? defaultText : text;
+			bool isEmpty = Text.Length == 0;
+			string drawText = isEmpty ? defaultText : Text;
 			DynamicSpriteFont font = Main.fontMouseText;
 			Vector2 size = font.MeasureString(drawText);
 			float scale = (innerHeight / size.Y)*1.25f;

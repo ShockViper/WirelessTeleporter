@@ -18,8 +18,9 @@ namespace WirelessTeleporter
     class UIServerPanel :UIPanel
     {
         public bool connected;
-        private TEServer btnServer;
-        private TETeleport btnTeleport;
+        internal TEServer btnServer;
+        internal TETeleport btnTeleport;
+        internal UIText txt = new UIText("");
 
         public override void OnInitialize()
         {
@@ -29,13 +30,26 @@ namespace WirelessTeleporter
         }
         public override void Click(UIMouseEvent evt)           
         {
+            if (btnServer.capacity <= btnServer.teleports.Count || btnTeleport.connectedTo == btnServer.position) { return; }
+            TEServer old;// = new TEServer;
+            if (btnTeleport.connectedTo != new Point16(-1, -1))
+            {
+                old = (TEServer)TileEntity.ByPosition[btnTeleport.connectedTo];
+                old.teleports.Remove(btnTeleport);
+            }
             btnTeleport.connectedTo = btnServer.position;
+            btnServer.teleports.Add(btnTeleport);
+            //setInfo(btnServer, btnTeleport, true);
             connected = true;
             foreach(UIServerPanel pnl in WirelesTeleporter.serverUI.serverpanels)
             {
-                if(this != pnl && pnl !=null)
+                if(pnl !=null)
                 {
-                    pnl.connected = false;
+                    if (this != pnl)
+                    {
+                        pnl.connected = false;
+                    }
+                    pnl.SetInfo(pnl.btnServer, pnl.btnTeleport,true);
                     
                 }
                 Parent.RecalculateChildren();
@@ -53,19 +67,69 @@ namespace WirelessTeleporter
             }
         }
 
-        public void setInfo(string text,TEServer server,TETeleport teleport)
+        public void SetInfo(TEServer server,TETeleport teleport,bool reset=false)
         {
             btnServer = server;
-            btnTeleport = teleport;
-            UIText txt = new UIText(text);
+            btnTeleport = teleport;            
+            txt.SetText( server.name + ":" + server.position.ToString() + " " + server.teleports.Count + "/" + server.capacity);
             txt.Top.Set(-5f, 0f);
             txt.Left.Set(0f, 0f);
             txt.Width.Set(this.Width.Pixels-5, 0f);
             txt.Height.Set(this.Height.Pixels-5, 0f);
-            this.Append(txt);
+            if (!reset)
+            {
+                this.Append(txt);
+            }
         }
 
         
+    }
+
+    class UITeleportPanel : UIPanel
+    {
+        internal TEServer btnServer;
+        internal TETeleport btnTeleport;
+        internal TETeleport sourceTeleport;
+        internal UIText txt = new UIText("");
+
+        public override void OnInitialize()
+        {
+            base.OnInitialize();
+            this.Width.Set(10f, 0f);
+            this.Height.Set(10f, 0f);
+        }
+        public override void Click(UIMouseEvent evt)
+        {
+            if (sourceTeleport.TryTeleport(btnTeleport.position)) { ServerInfoUI.visible = false; }
+            base.Click(evt);
+        }
+
+        public override void Draw(SpriteBatch spriteBatch)
+        {
+            base.Draw(spriteBatch);
+            if (IsMouseHovering)
+            {
+                Main.hoverItemName = "Click to teleport ";
+            }
+        }
+
+        public void SetInfo(TEServer server, TETeleport teleport, TETeleport src, bool reset = false)
+        {
+            btnServer = server;
+            btnTeleport = teleport;
+            sourceTeleport = src;
+            txt.SetText(teleport.name + ":" + teleport.position.ToString());
+            txt.Top.Set(-5f, 0f);
+            txt.Left.Set(0f, 0f);
+            txt.Width.Set(this.Width.Pixels - 5, 0f);
+            txt.Height.Set(this.Height.Pixels - 5, 0f);
+            if (!reset)
+            {
+                this.Append(txt);
+            }
+        }
+
+
     }
 
     class ServerInfoUI : UIState
@@ -76,7 +140,8 @@ namespace WirelessTeleporter
         public static MouseState curMouse;
         public static MouseState oldMouse;
         public UIServerPanel[] serverpanels = { null, null, null, null };
-
+        private UIServerPanel tServerPanel;
+        private UITeleportPanel tTeleportPanel;
 
         public static bool MouseClicked
         {
@@ -100,7 +165,7 @@ namespace WirelessTeleporter
             info.Left.Set(500f, 0f);
             info.Top.Set(300f, 0f);
             info.Width.Set(300f, 0f);
-            info.Height.Set(500f, 0f);
+            info.Height.Set(300f, 0f);
             //info.BackgroundColor = Color.BlueViolet;
 
             // Next, we create another UIElement that we will place. Since we will be calling `info.Append(playButton);`, Left and Top are relative to the top left of the info UIElement. 
@@ -141,6 +206,7 @@ namespace WirelessTeleporter
             //info.Append(moneyDiplay);
             Recalculate();
             base.Append(info);
+            SetToCenter();
 
             // As a recap, ExampleUI is a UIState, meaning it covers the whole screen. We attach info to ExampleUI some distance from the top left corner.
             // We then place playButton, closeButton, and moneyDiplay onto info so we can easily place these UIElements relative to info.
@@ -156,9 +222,9 @@ namespace WirelessTeleporter
         }
 
 
-        public void setName(string name)
+        public void SetName(string name)
         {
-            this.txtName.setText(name);
+            this.txtName.SetText(name);
         }
 
         public override void Click(UIMouseEvent evt)
@@ -167,24 +233,29 @@ namespace WirelessTeleporter
             if (!info.IsMouseHovering) { visible = false; }
         }
 
-        public void addTeleportPanel(TETeleport teleport , List<Point16> servers, Point16 connectedServer)
+        private void SetToCenter()
+        {
+            info.Left.Set((Main.screenWidth / 2) - (info.Width.Pixels / 2), 0f);
+            info.Top.Set((Main.screenHeight / 2) - (info.Height.Pixels / 2), 0f);
+            info.Recalculate();
+        }
+
+        public void AddConnectPanel(TETeleport teleport , List<Point16> servers, Point16 connectedServer)
         {
             float lastpos;
-            UIPanel teleportPanel = new UIPanel();
-            teleportPanel.Left.Set(10f, 0f);
-            teleportPanel.Top.Set(55f, 0f);
-            teleportPanel.Width.Set(250f, 0f);
-            teleportPanel.Height.Set(200f, 0f);
-            //UIText txt = new UIText("test");
-            //teleport.Append(txt);
-            lastpos = 5f;
+            UIPanel serverPanel = new UIPanel();
+            serverPanel.Left.Set(10f, 0f);
+            serverPanel.Top.Set(55f, 0f);
+            serverPanel.Width.Set(250f, 0f);
+            serverPanel.Height.Set(200f, 0f);
+            lastpos = 0f;
             int cntServer = 0;
             foreach (Point16 server in servers)
             {
                 TEServer tmp = (TEServer)TileEntity.ByPosition[server];
-                UIServerPanel tServerPanel = new UIServerPanel();
+                tServerPanel = new UIServerPanel();
                 if (tmp.position == connectedServer) { tServerPanel.connected = true; }
-                tServerPanel.setInfo(tmp.name+":"+tmp.position.ToString(),tmp,teleport);
+                tServerPanel.SetInfo(tmp,teleport);
                 tServerPanel.Width.Set(0f,1);
                 tServerPanel.Left.Set(0f, 0f);
                 tServerPanel.Top.Set(lastpos, 0f);
@@ -192,16 +263,71 @@ namespace WirelessTeleporter
                 tServerPanel.Recalculate();
                 serverpanels[cntServer] = tServerPanel;
                 cntServer++;
-                teleportPanel.Append(tServerPanel);
+                serverPanel.Append(tServerPanel);
                 lastpos = lastpos + tServerPanel.Height.Pixels + 5f;
 
             }
+            lastpos += 15f;
+            if (lastpos < 120f) { lastpos = 120f; }
+            serverPanel.Height.Set(lastpos, 0f);
+            info.Append(serverPanel);
+            info.Height.Set(serverPanel.Top.Pixels + serverPanel.Height.Pixels + 10, 0f);
+            SetToCenter();
+        }
+
+        public void AddTeleportPanel(Point16 thisPos, Point16 connectedServer)
+        {
+            float lastpos;
+            UIPanel teleportPanel = new UIPanel();
+            teleportPanel.Left.Set(10f, 0f);
+            teleportPanel.Top.Set(55f, 0f);
+            teleportPanel.Width.Set(250f, 0f);
+            teleportPanel.Height.Set(200f, 0f);
+            lastpos = 5f;
+            if (connectedServer != new Point16(-1, -1))
+            {
+                TEServer server = (TEServer)TileEntity.ByPosition[connectedServer];
+                TETeleport thisTeleport = (TETeleport)TileEntity.ByPosition[thisPos];
+                if (server.teleports.Count == 1)
+                {
+                    UIText error = new UIText("No other teleports \nconnected to server!");
+                    error.Top.Set(lastpos, 0f);
+                    error.Left.Set(10f, 0f);
+                    error.TextColor = Color.Red;
+                    teleportPanel.Append(error);
+                }
+                else
+                {
+                    foreach (TETeleport teleport in server.teleports)
+                    {
+                        if (teleport.position == thisPos) { continue; }
+
+                        tTeleportPanel = new UITeleportPanel();
+                        tTeleportPanel.SetInfo(server, teleport, thisTeleport);
+                        tTeleportPanel.Width.Set(0f, 1);
+                        tTeleportPanel.Left.Set(0f, 0f);
+                        tTeleportPanel.Top.Set(lastpos, 0f);
+                        tTeleportPanel.Height.Set(30f, 0f);
+                        tTeleportPanel.Recalculate();
+                        teleportPanel.Append(tTeleportPanel);
+                        lastpos = lastpos + tTeleportPanel.Height.Pixels + 5f;
+
+                    }
+                }
+            }
+            else
+            {
+                UIText error = new UIText("Not connected to server!");
+                error.Top.Set(lastpos, 0f);
+                error.Left.Set(10f, 0f);
+                error.TextColor = Color.Red;
+                teleportPanel.Append(error);
+            }
             info.Append(teleportPanel);
             info.Height.Set(teleportPanel.Top.Pixels + teleportPanel.Height.Pixels + 10, 0f);
-            info.Left.Set((Main.screenWidth / 2) - (info.Width.Pixels / 2), 0f);
-            info.Top.Set((Main.screenHeight / 2) - (info.Height.Pixels / 2), 0f);
-            info.Recalculate();
+            SetToCenter();
         }
+
 
         public static void CheckMouse(GameTime gameTime)
         {

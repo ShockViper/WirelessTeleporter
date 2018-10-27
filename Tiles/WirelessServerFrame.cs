@@ -24,11 +24,14 @@ namespace WirelessTeleporter.Tiles
             Main.tileFrameImportant[Type] = true;
             TileObjectData.newTile.CopyFrom(TileObjectData.Style3x4);
             TileObjectData.newTile.Origin = new Point16(0, 3);
+            ModTranslation name = CreateMapEntryName();
             ModifyObjectData();
             TileObjectData.addTile(Type);
-            AddMapEntry(new Color(200, 200, 200));
+            name.SetDefault("Wireless Server");
+            AddMapEntry(new Color(200, 200, 200), name);
             // Set other values here
         }
+
 
         public virtual int ItemType(int frameX, int frameY)
         {

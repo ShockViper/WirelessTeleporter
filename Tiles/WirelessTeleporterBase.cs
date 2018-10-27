@@ -28,11 +28,14 @@ namespace WirelessTeleporter.Tiles
             TileObjectData.newTile.CoordinateHeights = new int[] { 16 };
             TileObjectData.newTile.HookPostPlaceMyPlayer = new PlacementHook(mod.GetTileEntity<TETeleport>().Hook_AfterPlacement, -1, 0, true);
             TileObjectData.addTile(Type);
-            AddMapEntry(new Color(200, 200, 200));
+            ModTranslation name = CreateMapEntryName();
+            name.SetDefault("Wireless Teleporter");
+            AddMapEntry(new Color(200, 200, 200),name);
             animationFrameHeight = 18;
             // Set other values here
         }
-        
+
+ 
         public override void AnimateTile(ref int frame, ref int frameCounter)
         {
             /*frameCounter++;
@@ -71,9 +74,28 @@ namespace WirelessTeleporter.Tiles
             }
         }
 
+        public override void HitWire(int i, int j)
+        {
+            Main.NewText("wire");            
+            Point16 topleft = TETeleport.GetTopLeft(i, j);
+            Main.NewText(topleft.ToString());
+            TETeleport tel = (TETeleport)TileEntity.ByPosition[topleft];
+            if (!tel.CheckPlayerInRange()) { return; }
+            if (!ServerInfoUI.visible)
+            {
+                ServerInfoUI.visible = true;
+                ServerInfoUI.activeTeleport = (TETeleport)TileEntity.ByPosition[topleft];
+                WirelesTeleporter.ActivateUI(UImode.Server);
+                WirelesTeleporter.serverUI.SetName(ServerInfoUI.activeTeleport.name);
+                WirelesTeleporter.serverUI.AddTeleportPanel(tel.position, tel.connectedTo);
+            }
+
+        }
+
         public override void RightClick(int i, int j)
         {
             base.RightClick(i, j);
+            
             Point16 topleft = TETeleport.GetTopLeft(i, j);
             TETeleport tel = (TETeleport)TileEntity.ByPosition[topleft];
             List<Point16> servers = tel.CheckServersInRange(topleft);
@@ -87,8 +109,8 @@ namespace WirelessTeleporter.Tiles
                 ServerInfoUI.visible = true;
                 ServerInfoUI.activeTeleport = (TETeleport)TileEntity.ByPosition[topleft];
                 WirelesTeleporter.ActivateUI(UImode.Server);
-                WirelesTeleporter.serverUI.setName(ServerInfoUI.activeTeleport.name);
-                WirelesTeleporter.serverUI.addTeleportPanel(tel,servers, tel.connectedTo);
+                WirelesTeleporter.serverUI.SetName(ServerInfoUI.activeTeleport.name);
+                WirelesTeleporter.serverUI.AddConnectPanel(tel,servers, tel.connectedTo);
             }
 
         }

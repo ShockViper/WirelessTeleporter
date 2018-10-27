@@ -83,7 +83,7 @@ namespace WirelessTeleporter.Tiles
                 ServerInfoUI.visible = true;
                 ServerInfoUI.activeServer = (TEServer)TileEntity.ByPosition[topleft];
                 WirelesTeleporter.ActivateUI(UImode.Server);
-                WirelesTeleporter.serverUI.setName(ServerInfoUI.activeServer.name);
+                WirelesTeleporter.serverUI.SetName(ServerInfoUI.activeServer.name);
             }
 
         }
