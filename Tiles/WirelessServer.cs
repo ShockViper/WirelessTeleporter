@@ -19,6 +19,8 @@ namespace WirelessTeleporter.Tiles
         public static string styleName = "WirelessServer";
         public static string serverInfo = "";
         private int capacity = 2;
+        private int glowFrame = 0;
+        private const int glowFrameHeight = 70;
 
 
         public override void ModifyObjectData()
@@ -112,13 +114,23 @@ namespace WirelessTeleporter.Tiles
                 WirelesTeleporter.hovername = info;
             }
         }
+        public override void AnimateTile(ref int frame, ref int frameCounter)
+        {
+            frameCounter++;
+			if (frameCounter > 20)
+			{
+				frameCounter = 0;
+                glowFrame= Main.rand.Next(4);
+			}
+            // Above code works, but since we are just mimicking another tile, we can just use the same value.
+        }
 
         public override void PostDraw(int i, int j, SpriteBatch spriteBatch)
         {
              Tile tile = Main.tile[i, j];
             Vector2 zero = Main.drawToScreen ? Vector2.Zero : new Vector2(Main.offScreenRange);
             Vector2 drawPos = zero + 16f * new Vector2(i, j) - Main.screenPosition;
-            Rectangle frame = new Rectangle(tile.frameX, tile.frameY, 16, 16);
+            Rectangle frame = new Rectangle(tile.frameX , tile.frameY + (glowFrame * glowFrameHeight), 16, 16);
             Color lightColor = Lighting.GetColor(i, j, Color.White);
             Color color = Color.Lerp(Color.White, lightColor, 0.5f);
             spriteBatch.Draw(mod.GetTexture("Tiles/WirelessServer_Glow"), drawPos, frame, color);

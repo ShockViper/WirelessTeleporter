@@ -1,8 +1,8 @@
 ﻿Server Info on UI (add cap, servers in world) - done
 close UI on move too far - done
-edit ranges
+edit ranges - done
 edit recipes
-animated glow on servers?
+animated glow on servers? - done
 set for localization
 add more teleports (more ranges)?
 cleanup

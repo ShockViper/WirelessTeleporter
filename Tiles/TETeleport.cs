@@ -16,7 +16,7 @@ namespace WirelessTeleporter.Tiles
     {
         internal string name;
         internal int teleportID;
-        internal int rangeMultiplier = 1;
+        internal int rangeMultiplier = 2;
         internal int style;
         internal Point16 position = new Point16(-1, -1);
         internal Point16 connectedTo=new Point16(-1,-1);
@@ -46,7 +46,7 @@ namespace WirelessTeleporter.Tiles
         private void InitAfterPlace(int i, int j, int stil, int id)
         {
             TETeleport tmp = (TETeleport)TileEntity.ByID[id];
-            tmp.range = (Main.maxTilesY / 4) * tmp.rangeMultiplier;
+            tmp.range = (Main.maxTilesY / 8) * tmp.rangeMultiplier;
             tmp.name = "Teleport" + id;
             tmp.position = new Point16(i, j);
         }
