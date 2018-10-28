@@ -100,14 +100,17 @@ namespace WirelessTeleporter
         }
         public override void Click(UIMouseEvent evt)
         {
-            if (sourceTeleport.TryTeleport(btnTeleport.position)) { ServerInfoUI.visible = false; }
+            if (sourceTeleport != null)
+            {
+                if (sourceTeleport.TryTeleport(btnTeleport.position)) { ServerInfoUI.visible = false; }
+            }
             base.Click(evt);
         }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
             base.Draw(spriteBatch);
-            if (IsMouseHovering)
+            if (IsMouseHovering && sourceTeleport!=null)
             {
                 Main.hoverItemName = "Click to teleport ";
             }
@@ -137,6 +140,7 @@ namespace WirelessTeleporter
 
         public static TETeleport activeTeleport;
         public static TEServer activeServer;
+        public static Point16 activePos;
         public static MouseState curMouse;
         public static MouseState oldMouse;
         public UIServerPanel[] serverpanels = { null, null, null, null };
@@ -157,35 +161,19 @@ namespace WirelessTeleporter
 
         public override void OnInitialize()
         {
-            // Here we define our container UIElement. In DragableUIPanel.cs, you can see that DragableUIPanel is a UIPanel with a couple added features.
             info = new UIPanel();
             info.SetPadding(0);
-            // We need to place this UIElement in relation to its Parent. Later we will be calling `base.Append(info);`. 
-            // This means that this class, ExampleUI, will be our Parent. Since ExampleUI is a UIState, the Left and Top are relative to the top left of the screen.
             info.Left.Set(500f, 0f);
             info.Top.Set(300f, 0f);
             info.Width.Set(300f, 0f);
             info.Height.Set(300f, 0f);
-            //info.BackgroundColor = Color.BlueViolet;
 
-            // Next, we create another UIElement that we will place. Since we will be calling `info.Append(playButton);`, Left and Top are relative to the top left of the info UIElement. 
-            // By properly nesting UIElements, we can position things relatively to each other easily.
-            // Texture2D buttonPlayTexture = mod.GetTexture("Terraria/UI/ButtonPlay");
             txtName = new UITextBox();
             txtName.Left.Set(10f, 0f);
             txtName.Top.Set(10f, 0f);
             txtName.Width.Set(250f, 0f);
             txtName.Height.Set(40f, 0f);
-
             info.Append(txtName);
-            //UIHoverImageButton playButton = new UIHoverImageButton(buttonPlayTexture, "Reset Coins Per Minute Counter");
-            //playButton.Left.Set(110, 0f);
-            //playButton.Top.Set(10, 0f);
-            //playButton.Width.Set(22, 0f);
-            //playButton.Height.Set(22, 0f);
-            //// UIHoverImageButton doesn't do anything when Clicked. Here we assign a method that we'd like to be called when the button is clicked.
-            //playButton.OnClick += new MouseEvent(PlayButtonClicked);
-            //info.Append(playButton);
 
             Texture2D btnClose = ModLoader.GetTexture("WirelessTeleporter/UI/BtnClose");
             UIHoverImageButton closeButton = new UIHoverImageButton(btnClose, "Close"); // Localized text for "Close"
@@ -195,22 +183,9 @@ namespace WirelessTeleporter
             closeButton.Height.Set(22, 0f);
             closeButton.OnClick += new MouseEvent(CloseButtonClicked);
             info.Append(closeButton);
-
-            //// UIMoneyDisplay is a fairly complicated custom UIElement. UIMoneyDisplay handles drawing some text and coin textures.
-            //// Organization is key to managing UI design. Making a contained UIElement like UIMoneyDisplay will make many things easier.
-            //moneyDiplay = new UIMoneyDisplay();
-            //moneyDiplay.Left.Set(15, 0f);
-            //moneyDiplay.Top.Set(20, 0f);
-            //moneyDiplay.Width.Set(100f, 0f);
-            //moneyDiplay.Height.Set(0, 1f);
-            //info.Append(moneyDiplay);
-            Recalculate();
             base.Append(info);
-            SetToCenter();
 
-            // As a recap, ExampleUI is a UIState, meaning it covers the whole screen. We attach info to ExampleUI some distance from the top left corner.
-            // We then place playButton, closeButton, and moneyDiplay onto info so we can easily place these UIElements relative to info.
-            // Since info will move, this proper organization will move playButton, closeButton, and moneyDiplay properly when info moves.
+            SetToCenter();
         }
 
         private void CloseButtonClicked(UIMouseEvent evt, UIElement listeningElement)
@@ -240,16 +215,74 @@ namespace WirelessTeleporter
             info.Recalculate();
         }
 
+        public void AddServerPanel()
+        {
+            UIPanel infoPanel = new UIPanel();
+            infoPanel.Left.Set(10f, 0f);
+            infoPanel.Top.Set(55f, 0f);
+            infoPanel.Width.Set(250f, 0f);
+            infoPanel.Height.Set(55f, 0f);
+            UIText cap = new UIText("Capacity: "+activeServer.capacity);
+            cap.Width.Set(0f, 1);
+            cap.Left.Set(0f, 0f);
+            cap.Top.Set(-5f, 0f);
+            infoPanel.Append(cap);
+            UIText world = new UIText("Server cap: " + WirelessWorld.activeServers+"/"+WirelessWorld.maxServers);
+            world.Width.Set(0f, 1);
+            world.Left.Set(0f, 0f);
+            world.Top.Set(15f, 0f);
+            infoPanel.Append(world);
+            info.Append(infoPanel);
+
+            UIPanel teleportsConnected = new UIPanel();
+            teleportsConnected.Left.Set(10f, 0f);
+            teleportsConnected.Top.Set(115f, 0f);
+            teleportsConnected.Width.Set(250f, 0f);
+            teleportsConnected.Height.Set(200f, 0f);
+
+            float lastpos = -5f;
+            UIText txt = new UIText("Connected teleports:");
+            txt.Width.Set(0f, 1);
+            txt.Left.Set(0f, 0f);
+            txt.Top.Set(lastpos, 0f);
+            teleportsConnected.Append(txt);
+            lastpos += 20;
+            foreach (TETeleport teleport in activeServer.teleports)
+            {
+                tTeleportPanel = new UITeleportPanel();
+                tTeleportPanel.SetInfo(activeServer, teleport, null);
+                tTeleportPanel.Width.Set(0f, 1);
+                tTeleportPanel.Left.Set(0f, 0f);
+                tTeleportPanel.Top.Set(lastpos, 0f);
+                tTeleportPanel.Height.Set(30f, 0f);
+                tTeleportPanel.Recalculate();
+                teleportsConnected.Append(tTeleportPanel);
+                lastpos = lastpos + tTeleportPanel.Height.Pixels + 5f;
+
+            }
+            lastpos += 15f;
+            if (lastpos < 120f) { lastpos = 120f; }
+            teleportsConnected.Height.Set(lastpos, 0f);
+            info.Append(teleportsConnected);
+            info.Height.Set(teleportsConnected.Top.Pixels + teleportsConnected.Height.Pixels + 10, 0f);
+            SetToCenter();
+        }
+
         public void AddConnectPanel(TETeleport teleport , List<Point16> servers, Point16 connectedServer)
         {
-            float lastpos;
-            UIPanel serverPanel = new UIPanel();
-            serverPanel.Left.Set(10f, 0f);
-            serverPanel.Top.Set(55f, 0f);
-            serverPanel.Width.Set(250f, 0f);
-            serverPanel.Height.Set(200f, 0f);
-            lastpos = 0f;
+            float lastpos=-5f;
+            UIPanel serversInRangePanel = new UIPanel();
+            serversInRangePanel.Left.Set(10f, 0f);
+            serversInRangePanel.Top.Set(55f, 0f);
+            serversInRangePanel.Width.Set(250f, 0f);
+            serversInRangePanel.Height.Set(200f, 0f);
             int cntServer = 0;
+            UIText txt = new UIText("Servers in range:");
+            txt.Width.Set(0f, 1);
+            txt.Left.Set(0f, 0f);
+            txt.Top.Set(lastpos, 0f);
+            serversInRangePanel.Append(txt);
+            lastpos += 20;
             foreach (Point16 server in servers)
             {
                 TEServer tmp = (TEServer)TileEntity.ByPosition[server];
@@ -263,27 +296,26 @@ namespace WirelessTeleporter
                 tServerPanel.Recalculate();
                 serverpanels[cntServer] = tServerPanel;
                 cntServer++;
-                serverPanel.Append(tServerPanel);
+                serversInRangePanel.Append(tServerPanel);
                 lastpos = lastpos + tServerPanel.Height.Pixels + 5f;
 
             }
             lastpos += 15f;
             if (lastpos < 120f) { lastpos = 120f; }
-            serverPanel.Height.Set(lastpos, 0f);
-            info.Append(serverPanel);
-            info.Height.Set(serverPanel.Top.Pixels + serverPanel.Height.Pixels + 10, 0f);
+            serversInRangePanel.Height.Set(lastpos, 0f);
+            info.Append(serversInRangePanel);
+            info.Height.Set(serversInRangePanel.Top.Pixels + serversInRangePanel.Height.Pixels + 10, 0f);
             SetToCenter();
         }
 
         public void AddTeleportPanel(Point16 thisPos, Point16 connectedServer)
         {
-            float lastpos;
-            UIPanel teleportPanel = new UIPanel();
-            teleportPanel.Left.Set(10f, 0f);
-            teleportPanel.Top.Set(55f, 0f);
-            teleportPanel.Width.Set(250f, 0f);
-            teleportPanel.Height.Set(200f, 0f);
-            lastpos = 5f;
+            float lastpos=-5f;
+            UIPanel remoteTeleportsPanel = new UIPanel();
+            remoteTeleportsPanel.Left.Set(10f, 0f);
+            remoteTeleportsPanel.Top.Set(55f, 0f);
+            remoteTeleportsPanel.Width.Set(250f, 0f);
+            remoteTeleportsPanel.Height.Set(200f, 0f);
             if (connectedServer != new Point16(-1, -1))
             {
                 TEServer server = (TEServer)TileEntity.ByPosition[connectedServer];
@@ -294,10 +326,17 @@ namespace WirelessTeleporter
                     error.Top.Set(lastpos, 0f);
                     error.Left.Set(10f, 0f);
                     error.TextColor = Color.Red;
-                    teleportPanel.Append(error);
+                    remoteTeleportsPanel.Append(error);
                 }
                 else
                 {
+                    UIText txt = new UIText("Remote teleports:");
+                    txt.Width.Set(0f, 1);
+                    txt.Left.Set(0f, 0f);
+                    txt.Top.Set(lastpos, 0f);
+                    remoteTeleportsPanel.Append(txt);
+                    lastpos += 20;
+
                     foreach (TETeleport teleport in server.teleports)
                     {
                         if (teleport.position == thisPos) { continue; }
@@ -309,7 +348,7 @@ namespace WirelessTeleporter
                         tTeleportPanel.Top.Set(lastpos, 0f);
                         tTeleportPanel.Height.Set(30f, 0f);
                         tTeleportPanel.Recalculate();
-                        teleportPanel.Append(tTeleportPanel);
+                        remoteTeleportsPanel.Append(tTeleportPanel);
                         lastpos = lastpos + tTeleportPanel.Height.Pixels + 5f;
 
                     }
@@ -321,10 +360,10 @@ namespace WirelessTeleporter
                 error.Top.Set(lastpos, 0f);
                 error.Left.Set(10f, 0f);
                 error.TextColor = Color.Red;
-                teleportPanel.Append(error);
+                remoteTeleportsPanel.Append(error);
             }
-            info.Append(teleportPanel);
-            info.Height.Set(teleportPanel.Top.Pixels + teleportPanel.Height.Pixels + 10, 0f);
+            info.Append(remoteTeleportsPanel);
+            info.Height.Set(remoteTeleportsPanel.Top.Pixels + remoteTeleportsPanel.Height.Pixels + 10, 0f);
             SetToCenter();
         }
 

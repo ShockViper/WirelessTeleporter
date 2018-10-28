@@ -51,8 +51,7 @@ namespace WirelessTeleporter.Tiles
         {
             string info="";
             info =  "Name : " + name + "\n";
-            info += "Pos  : " + position.ToString() + "\n";
-            info += "Cap  : " + capacity+"/"+WirelessWorld.totalCapacity;
+            info += "Cap  : " + capacity;
             return info;
         }
 

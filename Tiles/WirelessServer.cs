@@ -82,8 +82,10 @@ namespace WirelessTeleporter.Tiles
             {
                 ServerInfoUI.visible = true;
                 ServerInfoUI.activeServer = (TEServer)TileEntity.ByPosition[topleft];
+                ServerInfoUI.activePos = new Point16(topleft.X + 1, topleft.Y + 4);
                 WirelesTeleporter.ActivateUI(UImode.Server);
                 WirelesTeleporter.serverUI.SetName(ServerInfoUI.activeServer.name);
+                WirelesTeleporter.serverUI.AddServerPanel();
             }
 
         }
@@ -107,7 +109,6 @@ namespace WirelessTeleporter.Tiles
              if (true)
             {
                 string info = ((TEServer)TileEntity.ByPosition[topleft]).GetServerInfo();
-                info += "\n" + WirelessWorld.activeServers;
                 WirelesTeleporter.hovername = info;
             }
         }

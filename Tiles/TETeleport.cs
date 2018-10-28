@@ -61,8 +61,7 @@ namespace WirelessTeleporter.Tiles
         {
             string info = "";
             info =  "Name : " + name + "\n";
-            info += "Con  : " + connectedTo + "\n";
-            info += "Rng  : " + range;
+            info += "Range: " + range;
             return info;
         }
 

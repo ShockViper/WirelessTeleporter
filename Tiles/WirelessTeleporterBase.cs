@@ -66,12 +66,7 @@ namespace WirelessTeleporter.Tiles
         {
             Point16 topleft = TETeleport.GetTopLeft(i, j);
             WirelesTeleporter.hovering = true;
-
-            if (true)
-            {
-                string info = ((TETeleport)TileEntity.ByPosition[topleft]).GetTeleportInfo();
-                WirelesTeleporter.hovername = info;
-            }
+            WirelesTeleporter.hovername = ((TETeleport)TileEntity.ByPosition[topleft]).GetTeleportInfo();
         }
 
         public override void HitWire(int i, int j)
@@ -85,6 +80,7 @@ namespace WirelessTeleporter.Tiles
             {
                 ServerInfoUI.visible = true;
                 ServerInfoUI.activeTeleport = (TETeleport)TileEntity.ByPosition[topleft];
+                ServerInfoUI.activePos = new Point16(topleft.X + 1, topleft.Y);
                 WirelesTeleporter.ActivateUI(UImode.Server);
                 WirelesTeleporter.serverUI.SetName(ServerInfoUI.activeTeleport.name);
                 WirelesTeleporter.serverUI.AddTeleportPanel(tel.position, tel.connectedTo);
@@ -108,6 +104,7 @@ namespace WirelessTeleporter.Tiles
             {
                 ServerInfoUI.visible = true;
                 ServerInfoUI.activeTeleport = (TETeleport)TileEntity.ByPosition[topleft];
+                ServerInfoUI.activePos = new Point16(topleft.X + 1, topleft.Y);
                 WirelesTeleporter.ActivateUI(UImode.Server);
                 WirelesTeleporter.serverUI.SetName(ServerInfoUI.activeTeleport.name);
                 WirelesTeleporter.serverUI.AddConnectPanel(tel,servers, tel.connectedTo);
