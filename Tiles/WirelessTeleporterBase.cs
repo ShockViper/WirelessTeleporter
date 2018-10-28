@@ -95,10 +95,8 @@ namespace WirelessTeleporter.Tiles
             Point16 topleft = TETeleport.GetTopLeft(i, j);
             TETeleport tel = (TETeleport)TileEntity.ByPosition[topleft];
             List<Point16> servers = tel.CheckServersInRange(topleft);
-            foreach(Point16 pos in servers)
-            {
-                Main.NewText(pos.ToString());
-            }
+            Main.NewText(Main.maxTilesX);
+            Main.NewText(Main.maxTilesY);
 
             if (!ServerInfoUI.visible)
             {

@@ -4,5 +4,5 @@ edit ranges
 edit recipes
 animated glow on servers?
 set for localization
-add more teleports (more ranges)
+add more teleports (more ranges)?
 cleanup
