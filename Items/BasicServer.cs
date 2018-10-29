@@ -35,14 +35,16 @@ namespace WirelessTeleporter.Items
             ModRecipe recipe = new ModRecipe(mod);
             recipe.AddIngredient(mod, "ServerChip",1);
             recipe.AddIngredient(mod, "GoldWireSpool", 1);
-            recipe.AddIngredient(ItemID.SilverBar, 5);
+            recipe.AddIngredient(ItemID.TitaniumBar, 5);
+            recipe.AddIngredient(ItemID.Wire, 5);
             recipe.AddTile(TileID.TinkerersWorkbench);
             recipe.SetResult(this);
             recipe.AddRecipe();
             recipe = new ModRecipe(mod);
             recipe.AddIngredient(mod, "ServerChip", 1);
             recipe.AddIngredient(mod, "GoldWireSpool", 1);
-            recipe.AddIngredient(ItemID.TungstenBar, 5);
+            recipe.AddIngredient(ItemID.AdamantiteBar, 5);
+            recipe.AddIngredient(ItemID.Wire, 5);
             recipe.AddTile(TileID.TinkerersWorkbench);
             recipe.SetResult(this);
             recipe.AddRecipe();

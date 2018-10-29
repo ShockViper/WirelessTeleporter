@@ -27,15 +27,15 @@ namespace WirelessTeleporter.Items
             item.consumable = true;
             item.rare = 1;
             item.maxStack = 99;
-            item.value = Item.sellPrice(0, 50);
+            item.value = Item.buyPrice(0, 10);
             // Set other item.X values here
         }
 
         public override void AddRecipes()
         {
             ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(ItemID.Wire,50);//chip
-            recipe.AddIngredient(ItemID.GoldOre,50);//clorophite
+            recipe.AddIngredient(ItemID.Wire,50);//2,5g
+            recipe.AddIngredient(ItemID.GoldOre,50);//10g
             recipe.AddTile(TileID.Furnaces);
             recipe.SetResult(this);
             recipe.AddRecipe();
