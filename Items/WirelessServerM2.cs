@@ -30,7 +30,6 @@ namespace WirelessTeleporter.Items
             item.consumable = true;
             item.rare = 1;
             item.maxStack = 1;
-            item.value = Item.sellPrice(0, 50);
             item.createTile = mod.TileType("WirelessServer");
             item.placeStyle = 1;
             // Set other item.X values here
@@ -39,8 +38,17 @@ namespace WirelessTeleporter.Items
         public override void AddRecipes()
         {
             ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(ItemID.IronBar,1);//chip
-            recipe.AddIngredient(mod.ItemType("WirelessServer"));//clorophite
+            recipe.AddIngredient(mod, "ServerUpgradeMK2");
+            recipe.AddIngredient(mod.ItemType("WirelessServer"));
+            recipe.AddIngredient(ItemID.Wire, 5);
+            recipe.AddTile(TileID.TinkerersWorkbench);
+            recipe.SetResult(this);
+            recipe.AddRecipe();
+            recipe = new ModRecipe(mod);
+            recipe.AddIngredient(mod, "BasicServer");
+            recipe.AddIngredient(mod, "ServerUpgradeMK2");
+            recipe.AddIngredient(mod.ItemType("WirelessServerFrame"));
+            recipe.AddIngredient(ItemID.Wire, 5);
             recipe.AddTile(TileID.TinkerersWorkbench);
             recipe.SetResult(this);
             recipe.AddRecipe();

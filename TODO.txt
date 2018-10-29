@@ -2,6 +2,7 @@
 close UI on move too far - done
 edit ranges - done
 edit recipes
+add items for recipes
 animated glow on servers? - done
 set for localization
 add more teleports (more ranges)?

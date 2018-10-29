@@ -173,8 +173,8 @@ namespace WirelessTeleporter.Tiles
             {
                 {"name", name},
                 {"teleportID", teleportID},
-                {"connectedTo", rangeMultiplier},
-                {"rangeMultiplier", connectedTo},
+                {"connectedTo", connectedTo},
+                {"rangeMultiplier", rangeMultiplier},
                 {"style", style},
                 {"pos", position }
             };
@@ -184,9 +184,9 @@ namespace WirelessTeleporter.Tiles
         {
             name = tag.Get<string>("name");
             teleportID = tag.Get<int>("teleportID");
-            rangeMultiplier = tag.Get<int>("rangeMultiplier");
+//            rangeMultiplier = tag.Get<int>("rangeMultiplier");
             style = tag.Get<int>("style");
-            connectedTo = tag.Get<Point16>("connectedTo");
+//            connectedTo = tag.Get<Point16>("connectedTo");
             position = tag.Get<Point16>("pos");
 
             if (connectedTo!=new Point16(-1, -1))
@@ -204,8 +204,11 @@ namespace WirelessTeleporter.Tiles
 
         public override void OnKill()
         {
+            if (connectedTo != new Point16(-1, -1))
+            {
             TEServer server = (TEServer)TileEntity.ByPosition[connectedTo];
             server.teleports.Remove(this);
+            }
             Main.NewText("teleport killed");
             base.OnKill();
         }

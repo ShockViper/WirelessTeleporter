@@ -20,7 +20,6 @@ namespace WirelessTeleporter.Items
         public override void SetDefaults()
         {
             item.CloneDefaults(ItemID.Teleporter);
-            item.value = Item.sellPrice(0, 25);
             item.createTile = mod.TileType("WirelessTeleporterBase");
             // Set other item.X values here
         }
@@ -28,7 +27,9 @@ namespace WirelessTeleporter.Items
         public override void AddRecipes()
         {
             ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(ItemID.IronBar,10);
+            recipe.AddIngredient(mod,"GoldWireSpool",2);
+            recipe.AddIngredient(ItemID.Diamond);
+            recipe.AddIngredient(ItemID.Lens,4);
             recipe.AddIngredient(ItemID.Teleporter);
             recipe.AddTile(TileID.TinkerersWorkbench);
             recipe.SetResult(this);
