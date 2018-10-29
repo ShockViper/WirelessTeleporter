@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using Terraria.ModLoader;
 using Terraria;
 using System.IO;
@@ -38,8 +35,7 @@ namespace WirelessTeleporter.Tiles
 
         public Rectangle RangeRect()
         {
-            Rectangle rect= new Rectangle((Position.X + 1) * 16 - range.X * 16, (Position.Y + 1) * 16 - range.Y * 16, range.X * 16 * 2, range.Y * 16 * 2);
-            Dust.QuickBox(rect.TopLeft(), rect.BottomRight(), 10, Color.White, null);
+            Rectangle rect= new Rectangle((Position.X + 1) * 16 - (range.X * 16), (Position.Y + 1) * 16 - (range.Y * 16), range.X * 32, range.Y * 32);
             return rect;
         }
 
@@ -64,28 +60,30 @@ namespace WirelessTeleporter.Tiles
             string info = "";
             info =  "Name : " + name + "\n";
             info += "Range: " + range.X+"/"+range.Y;
+            info += "\nRight click to setup";
             return info;
         }
 
         public bool TryTeleport(Point16 dest)
         {
             bool result = false;
-            Main.NewText("teleporting from:" + this.position.ToString() + " To:" + dest.ToString());
             Rectangle[] array = new Rectangle[2];
-            array[0].X = (int)(this.position.X * 16f);
-            array[0].Width = 48;
-            array[0].Height = 48;
-            array[0].Y = (int)(this.position.Y * 16f - (float)array[0].Height);
-            array[1].X = (int)(dest.X * 16f);
-            array[1].Width = 48;
-            array[1].Height = 48;
-            array[1].Y = (int)(dest.Y * 16f - (float)array[1].Height);
+            Rectangle startPos = array[0];
+            startPos.X = (int)(this.position.X * 16f);
+            startPos.Width = 48;
+            startPos.Height = 48;
+            startPos.Y = (int)(this.position.Y * 16f - (float)startPos.Height);
+            Rectangle endPos = array[1];
+            endPos.X = (int)(dest.X * 16f);
+            endPos.Width = 48;
+            endPos.Height = 48;
+            endPos.Y = (int)(dest.Y * 16f - (float)endPos.Height);
             for (int i = 0; i < 2; i++)
             {
-                Vector2 value = new Vector2((float)(array[1].X - array[0].X), (float)(array[1].Y - array[0].Y));
+                Vector2 value = new Vector2((float)(endPos.X - startPos.X), (float)(endPos.Y - startPos.Y));
                 if (i == 1)
                 {
-                    value = new Vector2((float)(array[0].X - array[1].X), (float)(array[0].Y - array[1].Y));
+                    value = new Vector2((float)(startPos.X - endPos.X), (float)(startPos.Y - endPos.Y));
                 }
                 if (!Wiring.blockPlayerTeleportationForOneIteration)
                 {
@@ -160,10 +158,8 @@ namespace WirelessTeleporter.Tiles
                 if (((TETeleport)TileEntity.ByPosition[pos]).RangeRect().Intersects(sRect))
                 {
                     temp.Add(server);
-                }
-                               
+                }                               
             }
-            Main.NewText("Servers in range"+temp.Count);
             return temp;
         }
 
@@ -184,11 +180,12 @@ namespace WirelessTeleporter.Tiles
         {
             name = tag.Get<string>("name");
             teleportID = tag.Get<int>("teleportID");
-//            rangeMultiplier = tag.Get<int>("rangeMultiplier");
+            rangeMultiplier = tag.Get<int>("rangeMultiplier");
             style = tag.Get<int>("style");
-//            connectedTo = tag.Get<Point16>("connectedTo");
+            connectedTo = tag.Get<Point16>("connectedTo");
             position = tag.Get<Point16>("pos");
 
+            range = new Point16((Main.maxTilesX / 8) * rangeMultiplier, ((Main.maxTilesY / 8) * rangeMultiplier));
             if (connectedTo!=new Point16(-1, -1))
             {
                 TEServer server = (TEServer)TileEntity.ByPosition[connectedTo];
@@ -209,13 +206,11 @@ namespace WirelessTeleporter.Tiles
             TEServer server = (TEServer)TileEntity.ByPosition[connectedTo];
             server.teleports.Remove(this);
             }
-            Main.NewText("teleport killed");
             base.OnKill();
         }
 
         public override int Hook_AfterPlacement(int i, int j, int type, int style, int direction)
         {
-            Main.NewText("teleport:i " + i + " j " + j + " t " + type + " s " + style + " d " + direction);
             if (Main.netMode == 1)
             {
                 NetMessage.SendTileSquare(Main.myPlayer, i, j, 3);

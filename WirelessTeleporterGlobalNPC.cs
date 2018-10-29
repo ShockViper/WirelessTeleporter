@@ -12,7 +12,7 @@ namespace WirelessTeleporter
     {
         public override void NPCLoot(NPC npc)
         {
-            if (((npc.type == NPCID.TheDestroyer) || (npc.type == NPCID.SkeletronPrime) || (npc.type == NPCID.Retinazer)))
+            if (((npc.type == NPCID.TheDestroyer) || (npc.type == NPCID.SkeletronPrime) || (npc.type == NPCID.Retinazer) || (npc.type == NPCID.Spazmatism)))
             {
                 if (Main.rand.Next(100) <= 20)
                 {

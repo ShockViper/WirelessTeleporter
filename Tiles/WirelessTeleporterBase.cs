@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Terraria.ModLoader;
 using Terraria;
 using Terraria.ID;
 using Terraria.ObjectData;
 using Microsoft.Xna.Framework;
 using Terraria.DataStructures;
-using Microsoft.Xna.Framework.Graphics;
 
 namespace WirelessTeleporter.Tiles
 {
@@ -32,23 +27,11 @@ namespace WirelessTeleporter.Tiles
             name.SetDefault("Wireless Teleporter");
             AddMapEntry(new Color(200, 200, 200),name);
             animationFrameHeight = 18;
-            // Set other values here
         }
 
  
         public override void AnimateTile(ref int frame, ref int frameCounter)
         {
-            /*frameCounter++;
-			if (frameCounter > 8)
-			{
-				frameCounter = 0;
-				frame++;
-				if (frame > 5)
-				{
-					frame = 0;
-				}
-			}*/
-            // Above code works, but since we are just mimicking another tile, we can just use the same value.
             frame = Main.tileFrame[TileID.Teleporter];
         }
 
@@ -70,10 +53,8 @@ namespace WirelessTeleporter.Tiles
         }
 
         public override void HitWire(int i, int j)
-        {
-            Main.NewText("wire");            
+        {       
             Point16 topleft = TETeleport.GetTopLeft(i, j);
-            Main.NewText(topleft.ToString());
             TETeleport tel = (TETeleport)TileEntity.ByPosition[topleft];
             if (!tel.CheckPlayerInRange()) { return; }
             if (!ServerInfoUI.visible)
@@ -95,8 +76,6 @@ namespace WirelessTeleporter.Tiles
             Point16 topleft = TETeleport.GetTopLeft(i, j);
             TETeleport tel = (TETeleport)TileEntity.ByPosition[topleft];
             List<Point16> servers = tel.CheckServersInRange(topleft);
-            Main.NewText(Main.maxTilesX);
-            Main.NewText(Main.maxTilesY);
 
             if (!ServerInfoUI.visible)
             {
@@ -107,7 +86,6 @@ namespace WirelessTeleporter.Tiles
                 WirelesTeleporter.serverUI.SetName(ServerInfoUI.activeTeleport.name);
                 WirelesTeleporter.serverUI.AddConnectPanel(tel,servers, tel.connectedTo);
             }
-
         }
 
         public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)

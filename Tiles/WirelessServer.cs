@@ -1,16 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Terraria.ModLoader;
-using Terraria;
-using Terraria.UI;
+﻿using Terraria;
 using Terraria.ObjectData;
 using Terraria.DataStructures;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
-using ReLogic.Graphics;
 
 namespace WirelessTeleporter.Tiles
 {
@@ -26,7 +18,6 @@ namespace WirelessTeleporter.Tiles
         public override void ModifyObjectData()
         {
             TileObjectData.newTile.StyleHorizontal = true;
-            //TileObjectData.newTile.StyleMultiplier = 5;
             TileObjectData.newTile.StyleWrapLimit = 5;
             TileObjectData.newTile.UsesCustomCanPlace = true;
             TileObjectData.newTile.HookPostPlaceMyPlayer = new PlacementHook(mod.GetTileEntity<TEServer>().Hook_AfterPlacement, -1, 0, true);
@@ -72,11 +63,6 @@ namespace WirelessTeleporter.Tiles
             return base.CanPlace(i, j);
         }
 
-        public override void PlaceInWorld(int i, int j, Item item)
-        {
-            Tile tile = Main.tile[i, j];            
-        }
-
         public override void RightClick(int i, int j)
         {
             Point16 topleft = TEServer.GetTopLeft(i, j);
@@ -89,10 +75,8 @@ namespace WirelessTeleporter.Tiles
                 WirelesTeleporter.serverUI.SetName(ServerInfoUI.activeServer.name);
                 WirelesTeleporter.serverUI.AddServerPanel();
             }
-
         }
-
-
+        
         public override void MouseOver(int i, int j)
         {
             MouseOverBoth(i, j);
@@ -114,6 +98,7 @@ namespace WirelessTeleporter.Tiles
                 WirelesTeleporter.hovername = info;
             }
         }
+
         public override void AnimateTile(ref int frame, ref int frameCounter)
         {
             frameCounter++;
@@ -122,12 +107,11 @@ namespace WirelessTeleporter.Tiles
 				frameCounter = 0;
                 glowFrame= Main.rand.Next(4);
 			}
-            // Above code works, but since we are just mimicking another tile, we can just use the same value.
         }
 
         public override void PostDraw(int i, int j, SpriteBatch spriteBatch)
         {
-             Tile tile = Main.tile[i, j];
+            Tile tile = Main.tile[i, j];
             Vector2 zero = Main.drawToScreen ? Vector2.Zero : new Vector2(Main.offScreenRange);
             Vector2 drawPos = zero + 16f * new Vector2(i, j) - Main.screenPosition;
             Rectangle frame = new Rectangle(tile.frameX , tile.frameY + (glowFrame * glowFrameHeight), 16, 16);

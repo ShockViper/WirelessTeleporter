@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using Terraria.ModLoader;
 using Terraria;
 using Terraria.ModLoader.IO;
@@ -102,13 +99,11 @@ namespace WirelessTeleporter.Tiles
             {
                 tports.connectedTo = new Point16(-1, -1);
             }
-            Main.NewText("killed");
             base.OnKill();
         }
 
         public override int Hook_AfterPlacement(int i, int j, int type, int style, int direction)
         {
-            Main.NewText("server:i " + i + " j " + j + " t " + type + " s " + style + " d " + direction);
             if (Main.netMode == 1)
             {
                 NetMessage.SendTileSquare(Main.myPlayer, i, j, 3);

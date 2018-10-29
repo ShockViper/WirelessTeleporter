@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Terraria.ModLoader;
-using Terraria;
+﻿using Terraria.ModLoader;
 using Terraria.ID;
-using Microsoft.Xna.Framework;
 
 namespace WirelessTeleporter.Items
 {
@@ -26,8 +19,7 @@ namespace WirelessTeleporter.Items
             item.autoReuse = false;
             item.consumable = true;
             item.rare = 1;
-            item.maxStack = 99;
-            // Set other item.X values here
+            item.maxStack = 1;
         }
 
         public override void AddRecipes()
@@ -37,7 +29,7 @@ namespace WirelessTeleporter.Items
             recipe.AddIngredient(mod, "GoldWireSpool", 3);
             recipe.AddIngredient(ItemID.LunarBar, 5);
             recipe.AddIngredient(ItemID.Wire, 50);
-            recipe.AddTile(TileID.TinkerersWorkbench);
+            recipe.AddTile(TileID.LunarCraftingStation);
             recipe.SetResult(this);
             recipe.AddRecipe();
         }

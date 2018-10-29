@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Terraria.ModLoader;
-using Terraria;
+﻿using Terraria.ModLoader;
 using Terraria.ID;
-using Microsoft.Xna.Framework;
 
 namespace WirelessTeleporter.Items
 {
@@ -21,14 +14,14 @@ namespace WirelessTeleporter.Items
         {
             item.CloneDefaults(ItemID.Teleporter);
             item.createTile = mod.TileType("WirelessTeleporterBase");
-            // Set other item.X values here
         }
 
         public override void AddRecipes()
         {
             ModRecipe recipe = new ModRecipe(mod);
             recipe.AddIngredient(mod,"GoldWireSpool",2);
-            recipe.AddIngredient(ItemID.Diamond);
+            recipe.AddIngredient(ItemID.Diamond,2);
+            recipe.AddIngredient(ItemID.Sapphire, 2);
             recipe.AddIngredient(ItemID.Lens,4);
             recipe.AddIngredient(ItemID.Teleporter);
             recipe.AddTile(TileID.TinkerersWorkbench);

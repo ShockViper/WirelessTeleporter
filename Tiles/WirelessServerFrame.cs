@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Terraria.ModLoader;
+﻿using Terraria.ModLoader;
 using Terraria;
-using Terraria.ID;
 using Terraria.ObjectData;
 using Microsoft.Xna.Framework;
 using Terraria.DataStructures;
@@ -29,7 +23,6 @@ namespace WirelessTeleporter.Tiles
             TileObjectData.addTile(Type);
             name.SetDefault("Wireless Server");
             AddMapEntry(new Color(200, 200, 200), name);
-            // Set other values here
         }
 
 
@@ -51,7 +44,6 @@ namespace WirelessTeleporter.Tiles
             WirelessWorld.servers.Remove(TEServer.GetTopLeft(i, j));
             WirelessWorld.totalCapacity -= ((TEServer)TileEntity.ByPosition[TEServer.GetTopLeft(i, j)]).capacity;
             mod.GetTileEntity<TEServer>().Kill(i, j);
-            //Item.NewItem(i * 16, j * 16, 48, 64, mod.ItemType(item));
         }
     }
 }

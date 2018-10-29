@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
@@ -31,7 +28,7 @@ namespace WirelessTeleporter
         public override void Click(UIMouseEvent evt)           
         {
             if (btnServer.capacity <= btnServer.teleports.Count || btnTeleport.connectedTo == btnServer.position) { return; }
-            TEServer old;// = new TEServer;
+            TEServer old;
             if (btnTeleport.connectedTo != new Point16(-1, -1))
             {
                 old = (TEServer)TileEntity.ByPosition[btnTeleport.connectedTo];
@@ -39,7 +36,6 @@ namespace WirelessTeleporter
             }
             btnTeleport.connectedTo = btnServer.position;
             btnServer.teleports.Add(btnTeleport);
-            //setInfo(btnServer, btnTeleport, true);
             connected = true;
             foreach(UIServerPanel pnl in WirelesTeleporter.serverUI.serverpanels)
             {
@@ -137,7 +133,6 @@ namespace WirelessTeleporter
 
     class ServerInfoUI : UIState
     {
-
         public static TETeleport activeTeleport;
         public static TEServer activeServer;
         public static Point16 activePos;
@@ -176,7 +171,7 @@ namespace WirelessTeleporter
             info.Append(txtName);
 
             Texture2D btnClose = ModLoader.GetTexture("WirelessTeleporter/UI/BtnClose");
-            UIHoverImageButton closeButton = new UIHoverImageButton(btnClose, "Close"); // Localized text for "Close"
+            UIHoverImageButton closeButton = new UIHoverImageButton(btnClose, "Close");
             closeButton.Left.Set(270, 0f);
             closeButton.Top.Set(10, 0f);
             closeButton.Width.Set(22, 0f);
@@ -222,11 +217,13 @@ namespace WirelessTeleporter
             infoPanel.Top.Set(55f, 0f);
             infoPanel.Width.Set(250f, 0f);
             infoPanel.Height.Set(55f, 0f);
+
             UIText cap = new UIText("Capacity: "+activeServer.capacity);
             cap.Width.Set(0f, 1);
             cap.Left.Set(0f, 0f);
             cap.Top.Set(-5f, 0f);
             infoPanel.Append(cap);
+
             UIText world = new UIText("Server cap: " + WirelessWorld.activeServers+"/"+WirelessWorld.maxServers);
             world.Width.Set(0f, 1);
             world.Left.Set(0f, 0f);
@@ -246,6 +243,7 @@ namespace WirelessTeleporter
             txt.Left.Set(0f, 0f);
             txt.Top.Set(lastpos, 0f);
             teleportsConnected.Append(txt);
+
             lastpos += 20;
             foreach (TETeleport teleport in activeServer.teleports)
             {
@@ -258,7 +256,6 @@ namespace WirelessTeleporter
                 tTeleportPanel.Recalculate();
                 teleportsConnected.Append(tTeleportPanel);
                 lastpos = lastpos + tTeleportPanel.Height.Pixels + 5f;
-
             }
             lastpos += 15f;
             if (lastpos < 120f) { lastpos = 120f; }
@@ -276,12 +273,14 @@ namespace WirelessTeleporter
             serversInRangePanel.Top.Set(55f, 0f);
             serversInRangePanel.Width.Set(250f, 0f);
             serversInRangePanel.Height.Set(200f, 0f);
+
             int cntServer = 0;
             UIText txt = new UIText("Servers in range:");
             txt.Width.Set(0f, 1);
             txt.Left.Set(0f, 0f);
             txt.Top.Set(lastpos, 0f);
             serversInRangePanel.Append(txt);
+
             lastpos += 20;
             foreach (Point16 server in servers)
             {
@@ -298,7 +297,6 @@ namespace WirelessTeleporter
                 cntServer++;
                 serversInRangePanel.Append(tServerPanel);
                 lastpos = lastpos + tServerPanel.Height.Pixels + 5f;
-
             }
             lastpos += 15f;
             if (lastpos < 120f) { lastpos = 120f; }
@@ -367,7 +365,6 @@ namespace WirelessTeleporter
             SetToCenter();
         }
 
-
         public static void CheckMouse(GameTime gameTime)
         {
             oldMouse = curMouse;
@@ -376,8 +373,7 @@ namespace WirelessTeleporter
 
         public override void Update(GameTime gameTime)
         {
-            base.Update(gameTime); // don't remove.
-
+            base.Update(gameTime); 
             // Checking ContainsPoint and then setting mouseInterface to true is very common. This causes clicks on this UIElement to not cause the player to use current items. 
             if (ContainsPoint(Main.MouseScreen))
             {

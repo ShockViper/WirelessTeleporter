@@ -34,7 +34,6 @@ namespace WirelessTeleporter
 			this.defaultText = defaultText;
 		}
 
-
         public void SetText(string txt)
         {
             Text = txt;
@@ -168,7 +167,6 @@ namespace WirelessTeleporter
             {
                 Main.hoverItemName = "Click to change name";
             }
-
         }
 
         public bool KeyTyped(Keys key)

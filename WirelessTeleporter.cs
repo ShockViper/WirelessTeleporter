@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Terraria.ModLoader;
-using WirelessTeleporter.Tiles;
 using Terraria.UI;
 using Microsoft.Xna.Framework;
 using Terraria;
@@ -16,6 +11,7 @@ namespace WirelessTeleporter
         Server,
         Teleport
     }
+
     public class WirelesTeleporter : Mod
     {
         internal static WirelesTeleporter instance;
@@ -30,12 +26,12 @@ namespace WirelessTeleporter
             serverUserInterface = new UserInterface();
             serverUI = new ServerInfoUI();
         }
+
         public override void Unload()
         {
             instance = null;
         }
-
-
+        
         public static void ActivateUI(UImode type)
         {
             if (serverUI != null) { serverUI.Deactivate(); }

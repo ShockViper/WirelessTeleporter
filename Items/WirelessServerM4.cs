@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Terraria.ModLoader;
-using Terraria;
+﻿using Terraria.ModLoader;
 using Terraria.ID;
-using Microsoft.Xna.Framework;
 
 namespace WirelessTeleporter.Items
 {
@@ -32,7 +25,6 @@ namespace WirelessTeleporter.Items
             item.maxStack = 1;
             item.createTile = mod.TileType("WirelessServer");
             item.placeStyle = 3;
-            // Set other item.X values here
         }
 
         public override void AddRecipes()
