@@ -20,7 +20,7 @@ namespace WirelessTeleporter.Tiles
         internal int style;
         internal Point16 position = new Point16(-1, -1);
         internal Point16 connectedTo=new Point16(-1,-1);
-        internal int range = 20;
+        internal Point16 range = new Point16(20,20);
 
         
 
@@ -38,7 +38,7 @@ namespace WirelessTeleporter.Tiles
 
         public Rectangle RangeRect()
         {
-            Rectangle rect= new Rectangle((Position.X + 1) * 16 - range * 16, (Position.Y + 1) * 16 - range * 16, range * 16 * 2, range * 16 * 2);
+            Rectangle rect= new Rectangle((Position.X + 1) * 16 - range.X * 16, (Position.Y + 1) * 16 - range.Y * 16, range.X * 16 * 2, range.Y * 16 * 2);
             Dust.QuickBox(rect.TopLeft(), rect.BottomRight(), 10, Color.White, null);
             return rect;
         }
@@ -46,7 +46,7 @@ namespace WirelessTeleporter.Tiles
         private void InitAfterPlace(int i, int j, int stil, int id)
         {
             TETeleport tmp = (TETeleport)TileEntity.ByID[id];
-            tmp.range = (Main.maxTilesY / 8) * tmp.rangeMultiplier;
+            tmp.range = new Point16((Main.maxTilesX / 8) * tmp.rangeMultiplier, ((Main.maxTilesY / 8) * tmp.rangeMultiplier));
             tmp.name = "Teleport" + id;
             tmp.position = new Point16(i, j);
         }
@@ -63,7 +63,7 @@ namespace WirelessTeleporter.Tiles
         {
             string info = "";
             info =  "Name : " + name + "\n";
-            info += "Range: " + range;
+            info += "Range: " + range.X+"/"+range.Y;
             return info;
         }
 
