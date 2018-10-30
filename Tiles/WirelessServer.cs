@@ -73,6 +73,11 @@ namespace WirelessTeleporter.Tiles
         public override void RightClick(int i, int j)
         {
             Point16 topleft = TEServer.GetTopLeft(i, j);
+            if (TryUpgrade(topleft.X, topleft.Y))
+            {
+                Main.player[Main.myPlayer].tileInteractionHappened = true;
+                return;
+            }
             if (!ServerInfoUI.visible)
             {
                 ServerInfoUI.visible = true;
@@ -86,6 +91,7 @@ namespace WirelessTeleporter.Tiles
         
         public override void MouseOver(int i, int j)
         {
+            Main.LocalPlayer.noThrow = 2;
             MouseOverBoth(i, j);
         }
 
@@ -127,6 +133,63 @@ namespace WirelessTeleporter.Tiles
             spriteBatch.Draw(mod.GetTexture("Tiles/WirelessServer_Glow"), drawPos, frame, color);
         }
 
+        private bool TryUpgrade(int i, int j)
+        {
+            Player player = Main.player[Main.myPlayer];
+            Item item = player.inventory[player.selectedItem];
+            int style = Main.tile[i, j].frameX /54;
+            bool success = false;
+            if (style == 0 && item.type == mod.ItemType("ServerUpgradeMK2"))
+            {
+                SetStyle(i, j, 1);
+                success = true;
+            }
+            else if (style == 1 && item.type == mod.ItemType("ServerUpgradeMK3"))
+            {
+                SetStyle(i, j, 2);
+                success = true;
+            }
+            else if (style == 2 && item.type == mod.ItemType("ServerUpgradeMK4"))
+            {
+                SetStyle(i, j, 3);
+                success = true;
+            }
+            else if (style == 3 && item.type == mod.ItemType("ServerUpgradeMK5"))
+            {
+                SetStyle(i, j, 4);
+                success = true;
+            }
+            if (success)
+            {
+                TEServer server = (TEServer)TileEntity.ByPosition[new Point16(i, j)];
+                server.style = style + 1;
+                server.capacity = (server.style+1) * 2;
+                item.stack--;
+                if (item.stack <= 0)
+                {
+                    item.SetDefaults(0);
+                }
+
+                if (player.selectedItem == 58)
+                {
+                    Main.mouseItem = item.Clone();
+                }
+            }
+            return success;
+        }
+
+        private void SetStyle(int i, int j, int style)
+        {
+            for(int y = 0; y<4; y++)
+            {
+                for (int x = 0; x < 3; x++)
+                {
+                    Main.tile[i+x, j + y].frameX = (short)((54 * style)+(x*18));
+                }
+            }
+            int newType = ItemType(i, j);
+            Main.NewText("upgraded to type:" + newType);
+        }
 
     }
 

@@ -4,6 +4,7 @@ edit ranges - done
 edit recipes - mostly done
 add items for recipes - mostly done
 animated glow on servers? - done
+online upgrades
 set for localization
 add more teleports (more ranges)?
 cleanup

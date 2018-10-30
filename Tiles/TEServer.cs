@@ -14,7 +14,7 @@ namespace WirelessTeleporter.Tiles
         internal int serverID;
         internal int style;
         internal Point16 position = new Point16(-1, -1);
-        internal List<TETeleport> teleports = new List<TETeleport>();
+        internal IList<Point16> teleports = new List<Point16>();
 
         private void InitAfterPlace(int i, int j, int stil, int id)
         {
@@ -72,6 +72,7 @@ namespace WirelessTeleporter.Tiles
                 {"capacity", capacity},
                 {"serverID", serverID},
                 {"style", style},
+                {"teleports", teleports},
                 {"pos", position }
             };
         }
@@ -82,6 +83,7 @@ namespace WirelessTeleporter.Tiles
             capacity = tag.Get<int>("capacity");
             serverID = tag.Get<int>("serverID");
             style = tag.Get<int>("style");
+            teleports = tag.GetList<Point16>("teleports");
             position = tag.Get<Point16>("pos");
             UpdateWorld(position, capacity);
         }
@@ -95,9 +97,10 @@ namespace WirelessTeleporter.Tiles
         public override void OnKill()
         {
             if (WirelessWorld.activeServers > 0) { WirelessWorld.activeServers--; }
-            foreach (TETeleport tports in teleports)
+            foreach (Point16 pos in teleports)
             {
-                tports.connectedTo = new Point16(-1, -1);
+                TETeleport tel = (TETeleport)TileEntity.ByPosition[pos];
+                tel.connectedTo = new Point16(-1, -1);
             }
             base.OnKill();
         }

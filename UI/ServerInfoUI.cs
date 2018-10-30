@@ -32,10 +32,10 @@ namespace WirelessTeleporter
             if (btnTeleport.connectedTo != new Point16(-1, -1))
             {
                 old = (TEServer)TileEntity.ByPosition[btnTeleport.connectedTo];
-                old.teleports.Remove(btnTeleport);
+                old.teleports.Remove(btnTeleport.position);
             }
             btnTeleport.connectedTo = btnServer.position;
-            btnServer.teleports.Add(btnTeleport);
+            btnServer.teleports.Add(btnTeleport.position);
             connected = true;
             foreach(UIServerPanel pnl in WirelesTeleporter.serverUI.serverpanels)
             {
@@ -247,8 +247,9 @@ namespace WirelessTeleporter
             teleportsConnected.Append(txt);
 
             lastpos += 20;
-            foreach (TETeleport teleport in activeServer.teleports)
+            foreach (Point16 pos in activeServer.teleports)
             {
+                TETeleport teleport = (TETeleport)TileEntity.ByPosition[pos];
                 tTeleportPanel = new UITeleportPanel();
                 tTeleportPanel.SetInfo(activeServer, teleport, null);
                 tTeleportPanel.Width.Set(0f, 1);
@@ -337,8 +338,9 @@ namespace WirelessTeleporter
                     remoteTeleportsPanel.Append(txt);
                     lastpos += 20;
 
-                    foreach (TETeleport teleport in server.teleports)
+                    foreach (Point16 pos in server.teleports)
                     {
+                        TETeleport teleport = (TETeleport)TileEntity.ByPosition[pos];
                         if (teleport.position == thisPos) { continue; }
 
                         tTeleportPanel = new UITeleportPanel();

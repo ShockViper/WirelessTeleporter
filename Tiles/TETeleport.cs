@@ -187,12 +187,8 @@ namespace WirelessTeleporter.Tiles
             position = tag.Get<Point16>("pos");
 
             range = new Point16((Main.maxTilesX / 8) * rangeMultiplier, ((Main.maxTilesY / 8) * rangeMultiplier));
-            if (connectedTo!=new Point16(-1, -1))
-            {
-                TEServer server = (TEServer)TileEntity.ByPosition[connectedTo];
-                server.teleports.Add(this);
-            }
         }
+
 
         public override bool ValidTile(int i, int j)
         {
@@ -205,7 +201,7 @@ namespace WirelessTeleporter.Tiles
             if (connectedTo != new Point16(-1, -1))
             {
             TEServer server = (TEServer)TileEntity.ByPosition[connectedTo];
-            server.teleports.Remove(this);
+            server.teleports.Remove(this.position);
             }
             base.OnKill();
         }

@@ -40,7 +40,7 @@ namespace WirelessTeleporter.Items
             recipe.AddIngredient(mod, "BasicServer");
             recipe.AddIngredient(mod, "ServerUpgradeMK2");
             recipe.AddIngredient(mod.ItemType("WirelessServerFrame"));
-            recipe.AddIngredient(ItemID.Wire, 5);
+            recipe.AddIngredient(ItemID.Wire, 10);
             recipe.AddTile(TileID.TinkerersWorkbench);
             recipe.SetResult(this);
             recipe.AddRecipe();
