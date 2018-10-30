@@ -102,7 +102,7 @@ namespace WirelessTeleporter
 
 			if (hasFocus)
 			{
-				if (KeyTyped(Keys.Enter) || KeyTyped(Keys.Tab) || KeyTyped(Keys.Escape))
+				if (ServerInfoUI.KeyTyped(Keys.Enter) || ServerInfoUI.KeyTyped(Keys.Tab) || ServerInfoUI.KeyTyped(Keys.Escape))
 				{
                     UpdateName();
                     hasFocus = false;
@@ -169,10 +169,6 @@ namespace WirelessTeleporter
             }
         }
 
-        public bool KeyTyped(Keys key)
-		{
-			return Main.keyState.IsKeyDown(key) && !Main.oldKeyState.IsKeyDown(key);
-		}
 
 		private static void CheckBlockInput()
 		{

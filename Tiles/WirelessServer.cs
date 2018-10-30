@@ -63,6 +63,13 @@ namespace WirelessTeleporter.Tiles
             return base.CanPlace(i, j);
         }
 
+        public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)
+        {
+            r = 0.1f;
+            g = 0.2f;
+            b = 0.1f;
+        }
+
         public override void RightClick(int i, int j)
         {
             Point16 topleft = TEServer.GetTopLeft(i, j);

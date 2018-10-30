@@ -28,7 +28,6 @@ namespace WirelessTeleporter.Tiles
             AddMapEntry(new Color(200, 200, 200),name);
             animationFrameHeight = 18;
         }
-
  
         public override void AnimateTile(ref int frame, ref int frameCounter)
         {

@@ -206,7 +206,9 @@ namespace WirelessTeleporter
         private void SetToCenter()
         {
             info.Left.Set((Main.screenWidth / 2) - (info.Width.Pixels / 2), 0f);
-            info.Top.Set((Main.screenHeight / 2) - (info.Height.Pixels / 2), 0f);
+            float top = (Main.screenHeight / 2) - (info.Height.Pixels + Player.defaultHeight);
+            if (top < 0) { top = 0f; }
+            info.Top.Set(top, 0f);
             info.Recalculate();
         }
 
@@ -371,6 +373,11 @@ namespace WirelessTeleporter
             curMouse = Mouse.GetState();
         }
 
+        public static bool KeyTyped(Keys key)
+        {
+            return !Main.keyState.IsKeyDown(key) && Main.oldKeyState.IsKeyDown(key);
+        }
+
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime); 
@@ -378,6 +385,10 @@ namespace WirelessTeleporter
             if (ContainsPoint(Main.MouseScreen))
             {
                 Main.LocalPlayer.mouseInterface = true;
+            }
+            if(visible)
+            {
+                if (KeyTyped(Keys.Escape)) { visible = false; }
             }
         }
     }
