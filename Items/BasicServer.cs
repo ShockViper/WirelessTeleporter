@@ -8,7 +8,7 @@ namespace WirelessTeleporter.Items
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Basic Server for teleporter network");
-            Tooltip.SetDefault("A piece of your first working server");
+            Tooltip.SetDefault("Basic server supports 2 teleports");
         }
 
         public override void SetDefaults()

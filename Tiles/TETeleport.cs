@@ -59,7 +59,7 @@ namespace WirelessTeleporter.Tiles
         {
             string info = "";
             info =  "Name : " + name + "\n";
-            info += "Range: " + range.X+"/"+range.Y;
+            info += "Range: " + range.X*2+"/"+range.Y*2+"ft";
             info += "\nRight click to setup";
             return info;
         }
@@ -67,17 +67,18 @@ namespace WirelessTeleporter.Tiles
         public bool TryTeleport(Point16 dest)
         {
             bool result = false;
-            Rectangle[] array = new Rectangle[2];
-            Rectangle startPos = array[0];
+            
+            Rectangle startPos = new Rectangle();
             startPos.X = (int)(this.position.X * 16f);
             startPos.Width = 48;
             startPos.Height = 48;
             startPos.Y = (int)(this.position.Y * 16f - (float)startPos.Height);
-            Rectangle endPos = array[1];
+            Rectangle endPos = new Rectangle();
             endPos.X = (int)(dest.X * 16f);
             endPos.Width = 48;
             endPos.Height = 48;
             endPos.Y = (int)(dest.Y * 16f - (float)endPos.Height);
+            Rectangle[] array =new Rectangle[] { startPos, endPos };
             for (int i = 0; i < 2; i++)
             {
                 Vector2 value = new Vector2((float)(endPos.X - startPos.X), (float)(endPos.Y - startPos.Y));

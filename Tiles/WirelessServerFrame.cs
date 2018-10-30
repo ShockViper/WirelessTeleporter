@@ -13,6 +13,7 @@ namespace WirelessTeleporter.Tiles
         {
             
             Main.tileSolid[Type] = false;
+            Main.tileSolidTop[Type] = true;
             Main.tileBlockLight[Type] = true;
             Main.tileLighted[Type] = true;
             Main.tileFrameImportant[Type] = true;

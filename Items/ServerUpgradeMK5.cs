@@ -8,7 +8,7 @@ namespace WirelessTeleporter.Items
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Server Upgrade MK5");
-            Tooltip.SetDefault("Final upgrade for server");
+            Tooltip.SetDefault("Final upgrade for server\nSupport for 10 teleports");
         }
 
         public override void SetDefaults()
