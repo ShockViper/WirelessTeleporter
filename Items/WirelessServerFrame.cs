@@ -29,8 +29,14 @@ namespace WirelessTeleporter.Items
         public override void AddRecipes()
         {
             ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(ItemID.IronBar,10);
+            recipe.AddIngredient(ItemID.MythrilBar,10);
             recipe.AddIngredient(ItemID.Wire,10);
+            recipe.AddTile(TileID.Anvils);
+            recipe.SetResult(this);
+            recipe.AddRecipe();
+            recipe = new ModRecipe(mod);
+            recipe.AddIngredient(ItemID.OrichalcumBar, 10);
+            recipe.AddIngredient(ItemID.Wire, 10);
             recipe.AddTile(TileID.Anvils);
             recipe.SetResult(this);
             recipe.AddRecipe();
