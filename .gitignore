@@ -9,3 +9,4 @@
 *.csproj.user
 *.sln
 /obj/Release
+/Properties
